@@ -20,6 +20,17 @@ Apresentar os projetos de Gabriel Lima em uma experiência web moderna, responsi
 - `/about`
 - `/` redireciona para `/works`
 
+## Conteúdo atual (fase 1)
+
+- **Sobre**: informações profissionais de Gabriel de Souza Lima (arquitetura de soluções, IA, integrações e automação).
+- **Projetos exibidos**:
+  - **Lima Retratos**
+    - Front: https://limaretratos.flowstechai.com/
+    - Docs API: https://docs.limaretratos.flowstechai.com/
+    - Skills: https://skills.limaretratos.flowstechai.com/
+  - **SDR Virtual (IA Conversacional - Proposta Completa)**
+    - Projeto: https://sdr.flowstechai.com/
+
 ## Estrutura principal
 
 ```text

@@ -12,6 +12,8 @@ let renderer;
 let scene;
 let camera;
 let particles;
+let particlesFar;
+let pulseLight;
 let animationFrameId;
 let resizeHandler;
 
@@ -29,7 +31,7 @@ function isTestEnvironment() {
 
 function createParticles() {
   const geometry = new THREE.BufferGeometry();
-  const particleCount = 1800;
+  const particleCount = 2200;
   const positions = new Float32Array(particleCount * 3);
 
   for (let i = 0; i < particleCount; i += 1) {
@@ -43,7 +45,7 @@ function createParticles() {
 
   const material = new THREE.PointsMaterial({
     color: 0xff0033,
-    size: 0.035,
+    size: 0.028,
     transparent: true,
     opacity: 0.65,
     blending: THREE.AdditiveBlending
@@ -51,23 +53,54 @@ function createParticles() {
 
   particles = new THREE.Points(geometry, material);
   scene.add(particles);
+
+  const farGeometry = new THREE.BufferGeometry();
+  const farCount = 1200;
+  const farPositions = new Float32Array(farCount * 3);
+
+  for (let i = 0; i < farCount; i += 1) {
+    const i3 = i * 3;
+    farPositions[i3] = (Math.random() - 0.5) * 36;
+    farPositions[i3 + 1] = (Math.random() - 0.5) * 36;
+    farPositions[i3 + 2] = (Math.random() - 0.5) * 36;
+  }
+
+  farGeometry.setAttribute("position", new THREE.BufferAttribute(farPositions, 3));
+  const farMaterial = new THREE.PointsMaterial({
+    color: 0x5d001a,
+    size: 0.02,
+    transparent: true,
+    opacity: 0.42,
+    blending: THREE.AdditiveBlending
+  });
+
+  particlesFar = new THREE.Points(farGeometry, farMaterial);
+  scene.add(particlesFar);
+
+  pulseLight = new THREE.PointLight(0xff0033, 0.82, 16, 1.4);
+  pulseLight.position.set(0, 0, 5);
+  scene.add(pulseLight);
 }
 
 function animate() {
   animationFrameId = window.requestAnimationFrame(animate);
 
-  if (!particles || !renderer || !scene || !camera) {
+  if (!particles || !particlesFar || !pulseLight || !renderer || !scene || !camera) {
     return;
   }
 
   particles.rotation.y += 0.0007;
   particles.rotation.x += 0.0003;
+  particlesFar.rotation.y -= 0.00035;
+  particlesFar.rotation.x -= 0.00012;
 
   const targetX = pointer.x * 0.09;
   const targetY = pointer.y * 0.06;
   camera.position.x += (targetX - camera.position.x) * 0.04;
   camera.position.y += (targetY - camera.position.y) * 0.04;
   camera.lookAt(0, 0, 0);
+
+  pulseLight.intensity = 0.74 + Math.sin(Date.now() * 0.0012) * 0.16;
 
   renderer.render(scene, camera);
 }
@@ -107,6 +140,11 @@ onMounted(() => {
     { opacity: 0 },
     { opacity: 0.65, duration: 1.4, ease: "power2.out" }
   );
+  gsap.fromTo(
+    particlesFar.material,
+    { opacity: 0 },
+    { opacity: 0.42, duration: 1.8, ease: "power2.out" }
+  );
 
   resizeHandler = () => {
     if (!renderer || !camera) {
@@ -136,6 +174,11 @@ onBeforeUnmount(() => {
   if (particles) {
     particles.geometry.dispose();
     particles.material.dispose();
+  }
+
+  if (particlesFar) {
+    particlesFar.geometry.dispose();
+    particlesFar.material.dispose();
   }
 
   if (renderer) {
