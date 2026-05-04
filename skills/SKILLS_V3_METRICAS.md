@@ -1,6 +1,6 @@
 # Métricas de Qualidade de Skills
 
-Data de geração: `2026-04-09T15:07:54-03:00`
+Data de geração: `2026-04-25T14:47:20-03:00`
 Base analisada: `skills`
 
 ## Rubrica

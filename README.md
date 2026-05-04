@@ -14,11 +14,45 @@ Apresentar os projetos de Gabriel Lima em uma experiência web moderna, responsi
 - **Qualidade**: Vitest, Vue Test Utils, ESLint
 - **Deploy**: Docker + Nginx (SPA fallback)
 
+## Governança de skills
+
+- Versão ativa do pacote de skills: `4.4.0`.
+- A skill `front-ux-ui-design` orienta criação e melhoria de interfaces frontend/UI/UX com exatamente 3 propostas visuais com links clicáveis antes de implementação.
+- Documentação sincronizada em `doc_skills/readme.md` e `doc_skills/skills-workflow-guide.html`.
+
 ## Páginas entregues
 
 - `/works`
 - `/about`
 - `/` redireciona para `/works`
+
+## Experiência visual (fase 2)
+
+- Cena 3D procedural em tempo real com Three.js.
+- Pós-processamento com bloom para reforço neon/cyber.
+- HUD visual com camadas de scanline, ruído e glitch.
+- Câmera com animação dinâmica e resposta ao mouse.
+- Rail de projetos com transições cinematográficas.
+
+## Experiência visual (fase 3)
+
+- Reflexo de piso em tempo real para profundidade de cena.
+- Pós-processamento avançado com bloom, afterimage, film grain e RGB shift.
+- HUD com camada cromática adicional.
+- Sequenciador visual de projetos inspirado na referência.
+
+## Experiência visual (fase benchmark Samsy)
+
+- Benchmark documentado em `docs/benchmark-samsy-ninja.md`.
+- Direção visual inspirada em `https://samsy.ninja/`, sem copiar assets, código ou marca da referência.
+- UI global mais mínima, com preto dominante e vermelho `#ff0033` como acento principal.
+- Menu superior reduzido ao escopo do projeto: apenas `WORKS / ABOUT`.
+- Página **Works** reorganizada como palco visual central com vídeo principal, ações `INFOS`/`VISIT`, controle `Next / Prev`, sequenciador inferior e navegação global por setas do teclado.
+- Works agora usa movimento global de mouse com inclinação/deslocamento perceptível no painel ativo, múltiplos painéis de fundo em camadas, chuva vertical discreta, luzes vermelhas/cyan e piso preto glossy com reflexos borrados.
+- O painel principal de **Works** agora é um `<video>` limpo por projeto, configurado para rodar sem som em `autoplay`, `loop` e `playsinline`, sem efeitos decorativos internos sobre a mídia.
+- As barras/bolas inferiores globais foram removidas porque não fazem parte do comportamento desejado para a referência.
+- Os vídeos reais devem ser colocados em `public/videos/` com os nomes configurados em `src/data/works.js`.
+- Página **About** convertida para um `operator dossier`, com posicionamento principal à esquerda e painéis técnicos escaneáveis à direita.
 
 ## Conteúdo atual (fase 1)
 
@@ -55,11 +89,19 @@ src/
 tests/
   app.spec.js
   router.spec.js
+public/
+  videos/
 Dockerfile
 nginx.conf
+docs/
+  benchmark-samsy-ninja.md
 PRD.md
 Spec.md
 ```
+
+## Favicon
+
+- Favicon vetorial transparente em `public/favicon.svg`, usando `GBRL` com a mesma direção cromática principal da home (`#ff0033`).
 
 ## Requisitos
 

@@ -1,16 +1,18 @@
 <template>
   <header class="top-menu">
-    <nav aria-label="Navegação principal">
-      <RouterLink
-        v-for="item in menuItems"
-        :key="item.to"
-        :to="item.to"
-        class="menu-pill"
-        :class="{ active: isActive(item.to) }"
-      >
-        {{ item.label }}
-      </RouterLink>
-    </nav>
+    <div class="menu-surface" aria-label="Navegação principal">
+      <nav aria-label="Navegação principal">
+        <RouterLink
+          v-for="item in menuItems"
+          :key="item.to"
+          :to="item.to"
+          class="menu-pill"
+          :class="{ active: isActive(item.to) }"
+        >
+          {{ item.label }}
+        </RouterLink>
+      </nav>
+    </div>
   </header>
 </template>
 

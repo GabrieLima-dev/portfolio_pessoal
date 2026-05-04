@@ -9,6 +9,10 @@ const works = [
     details:
       "Atuação hands-on em arquitetura e evolução da solução, conectando APIs, fluxos automatizados e componentes de suporte operacional.",
     tags: ["IA Conversacional", "Integrações", "Automação", "Arquitetura"],
+    video: {
+      src: "/videos/lima-retratos-loop.mp4",
+      label: "Video demonstrativo em loop do projeto Lima Retratos"
+    },
     links: [
       {
         label: "Front",
@@ -34,6 +38,10 @@ const works = [
     details:
       "Projeto desenhado para ganho de eficiência no processo comercial, com foco em fluxo conversacional, regras de negócio e automação orientada a resultado.",
     tags: ["SDR", "IA Conversacional", "Pré-vendas", "Automação Comercial"],
+    video: {
+      src: "/videos/sdr-virtual-loop.mp4",
+      label: "Video demonstrativo em loop do projeto SDR Virtual"
+    },
     links: [
       {
         label: "Projeto",
