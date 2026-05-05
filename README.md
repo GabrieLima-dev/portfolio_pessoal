@@ -54,6 +54,32 @@ Apresentar os projetos de Gabriel Lima em uma experiência web moderna, responsi
 - Os vídeos reais devem ser colocados em `public/videos/` com os nomes configurados em `src/data/works.js`.
 - Página **About** convertida para um `operator dossier`, com posicionamento principal à esquerda e painéis técnicos escaneáveis à direita.
 
+## Ajuste responsivo conservador
+
+- Breakpoints intermediários adicionados para telas equivalentes a notebook 13", preservando a identidade visual atual.
+- `Works` teve HUD, menu, intro e stage recalibrados para evitar colisão entre overlays.
+- `About` teve título, coluna principal e painéis laterais reequilibrados para evitar palavras sobrepostas.
+- Escopo limitado a tamanhos, larguras e espaçamentos, sem mudança de conteúdo.
+
+## Ajuste pontual de Works
+
+- `Works` recebeu compactação do entorno do `works-rail` para reduzir a necessidade de scroll vertical.
+- O ajuste foi limitado a `padding`, altura mínima do stage e posição dos controles inferiores.
+- `About` permaneceu inalterado nesse incremento.
+
+## Rebalanceamento de About
+
+- `About` recebeu redução de altura útil para diminuir a necessidade de scroll vertical.
+- O ajuste foi concentrado no tamanho do título, no grid dos boxes técnicos e na área editorial.
+- `Works` permaneceu inalterado nesse incremento.
+
+## Ajuste fino de About
+
+- Os 4 boxes técnicos foram reduzidos novamente e reposicionados mais para cima.
+- O bloco principal do título ganhou mais respiro superior para descer um pouco na composição.
+- `Works` continuou sem alterações nesse refinamento.
+
+
 ## Conteúdo atual (fase 1)
 
 - **Sobre**: informações profissionais de Gabriel de Souza Lima (arquitetura de soluções, IA, integrações e automação).

@@ -185,3 +185,77 @@
 - Painel central de Works exibe vídeo limpo em loop, sem som e sem efeitos internos decorativos.
 - Layout continua navegável em desktop e mobile sem overflow horizontal.
 - `npm run lint`, `npm run test` e `npm run build` concluem com sucesso.
+
+## 10. PRD - Ajuste Responsivo Conservador
+
+> Objetivo: corrigir sobreposição de textos e aperto excessivo em telas intermediárias, preservando a identidade visual existente e limitando a intervenção a tamanhos, larguras e espaçamentos.
+
+### Contexto e evidências
+
+- Evidência enviada pelo usuário em 2026-05-04: capturas de `Works` e `About` em tela de 13" mostram colisão entre blocos fixos e tipografia superdimensionada.
+- Restrições confirmadas pelo usuário:
+  - não alterar a direção visual aprovada;
+  - não trocar conteúdo;
+  - agir apenas sobre tamanhos e espaçamentos;
+  - garantir legibilidade em `1280x832` e acima, sem overflow horizontal.
+
+### Requisitos funcionais adicionais
+
+1. RF-13: Works sem colisão em viewport intermediária
+- Regra: `hud-left`, menu superior, texto introdutório e palco principal devem coexistir sem sobreposição perceptível em largura equivalente a notebook 13".
+- Evidência: validação CSS e inspeção manual da página `Works`.
+
+2. RF-14: About sem esmagamento entre título e painéis
+- Regra: o título principal e a coluna de painéis técnicos devem respeitar limites de largura e respiro, sem texto invadir a outra coluna em viewport intermediária.
+- Evidência: validação CSS e inspeção manual da página `About`.
+
+### Critérios de aceitação adicionais
+
+- `Works` permanece com a mesma composição visual, mas com melhor separação entre overlays.
+- `About` preserva a hierarquia editorial, sem palavras sobrepostas.
+- Nenhuma nova seção, componente ou mudança de conteúdo é introduzida.
+
+## 11. PRD - Ajuste Pontual do Entorno de Works
+
+> Objetivo: reduzir a área externa ocupada por `Works` para diminuir a necessidade de scroll vertical, sem alterar `About`.
+
+### Contexto e evidências
+
+- Após a reversão do ajuste por altura, o usuário pediu um incremento menor e restrito a `Works`.
+- Restrição confirmada: atuar apenas no entorno do `works-rail`, preservando a identidade visual existente.
+
+### Requisitos funcionais adicionais
+
+1. RF-15: Works com entorno mais compacto
+- Regra: reduzir o espaço vertical consumido por `works-page`, `works-rail` e controles inferiores, preservando o conteúdo principal.
+- Evidência: validação CSS e inspeção manual de `Works`.
+
+## 12. PRD - Rebalanceamento de About
+
+> Objetivo: reduzir a necessidade de scroll em `About` ajustando principalmente o título e os boxes técnicos, sem mexer em `Works`.
+
+### Contexto e evidências
+
+- Após a estabilização de `Works`, o usuário pediu um ajuste dedicado em `About`.
+- Restrição confirmada: melhorar proporção do título e dos boxes para caber melhor na viewport, mantendo a linguagem visual.
+
+### Requisitos funcionais adicionais
+
+1. RF-16: About com título e boxes reequilibrados
+- Regra: reduzir o consumo vertical do `About` por meio de título menor, área editorial mais compacta e boxes técnicos mais baixos.
+- Evidência: validação CSS e inspeção manual de `About`.
+
+## 13. PRD - Ajuste Fino de About
+
+> Objetivo: reduzir ainda mais os boxes técnicos, subir a coluna da direita e reposicionar o título principal um pouco mais abaixo.
+
+### Contexto e evidências
+
+- Após o rebalanceamento inicial, o usuário apontou pelo screenshot que os 4 boxes ainda estavam grandes e baixos demais.
+- Restrição confirmada: continuar sem tocar em `Works`; atuar apenas em escala e posicionamento fino do `About`.
+
+### Requisitos funcionais adicionais
+
+1. RF-17: About com boxes mais compactos e coluna mais alta
+- Regra: reduzir mais a altura e o padding dos boxes e posicionar a coluna técnica mais para cima.
+- Evidência: validação CSS e inspeção manual de `About`.

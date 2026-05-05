@@ -2,7 +2,6 @@
   <section id="about" class="about-page">
     <div class="about-editorial" data-testid="about-editorial">
       <div class="about-primary">
-        
         <h1>Operator dossier</h1>
         <p>
           Desenvolvo soluções com IA, integrações e automação para operações reais.
@@ -63,7 +62,6 @@
           </ul>
         </section>
       </div>
-
     </div>
   </section>
 </template>

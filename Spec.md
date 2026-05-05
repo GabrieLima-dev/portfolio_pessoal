@@ -210,3 +210,85 @@
   - Criar ou baixar o vídeo final do produto.
   - Alterar backend.
   - Publicar/commit/push.
+
+## 8. Spec - Ajuste Responsivo Conservador
+
+### Escopo técnico
+
+- Origem: `PRD.md` seção 10.
+- Objetivo técnico: reequilibrar escalas, larguras e offsets em `Works` e `About` para evitar sobreposição em viewports intermediárias, mantendo a linguagem visual atual.
+- Fora de escopo:
+  - trocar conteúdo textual;
+  - alterar navegação;
+  - redesenhar componentes;
+  - introduzir novas dependências.
+
+### Mudanças planejadas
+
+1. Shell e overlays globais
+- Arquivo alvo: `src/styles/main.css`.
+- Mudança: introduzir breakpoints intermediários para reduzir área ocupada por `hud-left`, `hud-debug`, `top-menu` e `works-header`.
+- Validação: teste automatizado por contrato CSS e inspeção manual.
+
+2. Works
+- Arquivos alvo: `src/styles/main.css`, `tests/app.spec.js`.
+- Mudança: recalibrar largura do stage, bloco de copy e sequencer, preservando animações e estrutura existente.
+- Validação: teste automatizado confirma a presença das salvaguardas CSS; inspeção manual valida ausência de colisão.
+
+3. About
+- Arquivos alvo: `src/styles/main.css`, `tests/app.spec.js`.
+- Mudança: reduzir escala do título principal e reposicionar a coluna de painéis para preservar respiro em notebook 13".
+- Validação: teste automatizado confirma os novos limites e inspeção manual valida legibilidade.
+
+4. Documentação
+- Arquivos alvo: `PRD.md`, `Spec.md`, `README.md`.
+- Mudança: registrar o incremento responsivo e seus critérios de aceitação.
+- Validação: revisão textual.
+
+### TDD e validação
+
+- Red: adicionar teste de contrato CSS para breakpoints e limites responsivos.
+- Green: implementar os breakpoints intermediários até a suíte passar.
+- Refactor: ajustar valores finais sem ampliar escopo além de espaçamento e tipografia.
+
+## 9. Spec - Ajuste Pontual do Entorno de Works
+
+### Escopo técnico
+
+- Origem: `PRD.md` seção 11.
+- Objetivo técnico: reduzir apenas a área ao redor do `works-rail`, preservando `About`.
+
+### Mudanças planejadas
+
+1. Works
+- Arquivos alvo: `src/styles/main.css`, `tests/app.spec.js`.
+- Mudança: reduzir `padding` de `.works-page`, `min-height` de `.works-rail` e do stage, e subir discretamente os controles inferiores.
+- Validação: teste automatizado por contrato CSS e inspeção manual.
+
+## 10. Spec - Rebalanceamento de About
+
+### Escopo técnico
+
+- Origem: `PRD.md` seção 12.
+- Objetivo técnico: reduzir o consumo vertical do `About` atuando em título, altura editorial e boxes técnicos.
+
+### Mudanças planejadas
+
+1. About
+- Arquivos alvo: `src/styles/main.css`, `tests/app.spec.js`.
+- Mudança: compactar `about-page`, `about-editorial`, `about-primary h1`, `about-secondary` e `.about-panel`.
+- Validação: teste automatizado por contrato CSS e inspeção manual.
+
+## 11. Spec - Ajuste Fino de About
+
+### Escopo técnico
+
+- Origem: `PRD.md` seção 13.
+- Objetivo técnico: compactar mais os boxes e subir a coluna técnica, descendo levemente o bloco do título.
+
+### Mudanças planejadas
+
+1. About
+- Arquivos alvo: `src/styles/main.css`, `tests/app.spec.js`.
+- Mudança: aumentar discretamente o respiro superior da página, reduzir `top`, `width`, `gap`, `min-height` e `padding` da coluna técnica.
+- Validação: teste automatizado por contrato CSS e inspeção manual.

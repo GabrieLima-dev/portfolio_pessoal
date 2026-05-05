@@ -227,7 +227,7 @@ button {
 .works-page {
   position: relative;
   min-height: 100vh;
-  padding: 14.3rem clamp(1.1rem, 4vw, 3.1rem) 5.4rem;
+  padding: 12.6rem clamp(1.1rem, 4vw, 3.1rem) 4.2rem;
 }
 
 .works-header {
@@ -262,7 +262,7 @@ button {
 
 .works-rail {
   position: relative;
-  min-height: calc(100vh - 19.7rem);
+  min-height: calc(100vh - 17.2rem);
   --panel-tilt-x: 0deg;
   --panel-tilt-y: 0deg;
   --panel-shift-x: 0px;
@@ -560,14 +560,14 @@ button {
   position: relative;
   z-index: 2;
   width: min(840px, 56vw);
-  min-height: clamp(350px, 38vw, 470px);
+  min-height: clamp(320px, 35vw, 430px);
   margin: 0 auto;
   perspective: 1200px;
 }
 
 .work-stage-screen {
   position: relative;
-  min-height: clamp(350px, 38vw, 470px);
+  min-height: clamp(320px, 35vw, 430px);
   transform:
     translate3d(var(--panel-shift-x), var(--panel-shift-y), 0)
     rotateY(calc(-3deg + var(--panel-tilt-y)))
@@ -764,7 +764,7 @@ button {
 .work-controls {
   position: fixed;
   left: clamp(1.1rem, 3.8vw, 3.15rem);
-  bottom: 1.55rem;
+  bottom: 1.1rem;
   z-index: 14;
   display: flex;
   align-items: center;
@@ -786,7 +786,7 @@ button {
 .work-sequencer {
   position: fixed;
   left: 50%;
-  bottom: 1.47rem;
+  bottom: 1.1rem;
   z-index: 14;
   display: flex;
   align-items: end;
@@ -828,12 +828,12 @@ button {
 
 .about-page {
   min-height: 100vh;
-  padding: clamp(8.6rem, 14vw, 12.2rem) clamp(1.2rem, 4.4vw, 5.2rem) 4.8rem;
+  padding: clamp(8.2rem, 11.6vw, 10.8rem) clamp(1.2rem, 4.4vw, 5.2rem) 3.4rem;
 }
 
 .about-editorial {
   position: relative;
-  min-height: calc(100vh - 17rem);
+  min-height: calc(100vh - 14.2rem);
   color: var(--accent);
 }
 
@@ -866,7 +866,7 @@ button {
 
 .about-primary h1 {
   margin: 0 0 1rem;
-  font-size: clamp(4.4rem, 10vw, 8.8rem);
+  font-size: clamp(3.4rem, 8.2vw, 6.6rem);
   font-weight: 700;
   line-height: 0.88;
   text-transform: uppercase;
@@ -883,17 +883,17 @@ button {
 
 .about-secondary {
   position: absolute;
-  top: clamp(1.2rem, 3vw, 2.4rem);
-  left: min(610px, 45vw);
-  width: min(700px, 46vw);
+  top: 0.2rem;
+  left: min(560px, 43vw);
+  width: min(680px, 45vw);
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 0.88rem;
 }
 
 .about-panel {
-  min-height: 200px;
-  padding: 1.15rem 1.2rem 1.1rem;
+  min-height: 164px;
+  padding: 0.82rem 0.9rem 0.8rem;
   border: 1px solid rgba(255, 0, 51, 0.2);
   background:
     linear-gradient(180deg, rgba(20, 2, 6, 0.76), rgba(6, 2, 4, 0.58)),
@@ -1085,6 +1085,155 @@ button {
   }
 }
 
+@media (max-width: 1440px) {
+  .hud-left {
+    top: 1.5rem;
+    max-width: 190px;
+  }
+
+  .hud-left h1 {
+    font-size: clamp(1.8rem, 3.8vw, 3.5rem);
+  }
+
+  .hud-left p {
+    max-width: 180px;
+    font-size: 0.76rem;
+    line-height: 1.04;
+  }
+
+  .hud-debug {
+    top: 1.5rem;
+    font-size: 0.64rem;
+  }
+
+  .top-menu {
+    top: 1.45rem;
+  }
+
+  .top-menu nav,
+  .menu-surface {
+    gap: 1rem;
+  }
+
+  .menu-pill {
+    min-width: 6.2rem;
+    height: 2.12rem;
+    padding: 0 0.95rem;
+    font-size: 0.84rem;
+  }
+
+  .works-page {
+    padding-top: 11.4rem;
+  }
+
+  .works-header {
+    top: 8.8rem;
+    width: min(250px, 20vw);
+  }
+
+  .works-intro {
+    font-size: clamp(0.76rem, 0.95vw, 0.88rem);
+  }
+
+  .work-stage-visual {
+    width: min(700px, 54vw);
+  }
+
+  .work-copy {
+    left: 0.6rem;
+    bottom: clamp(4.2rem, 6vw, 5.6rem);
+    width: min(390px, 30vw);
+  }
+
+  .work-copy h3 {
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+  }
+
+  .work-stage-summary {
+    font-size: clamp(0.94rem, 1.3vw, 1.14rem);
+  }
+
+  .work-sequencer {
+    width: min(700px, 60vw);
+  }
+
+  .about-page {
+    padding-top: clamp(7.4rem, 10vw, 9.8rem);
+  }
+
+  .about-primary {
+    width: min(390px, 30vw);
+  }
+
+  .about-primary h1 {
+    font-size: clamp(3.8rem, 8vw, 6.8rem);
+  }
+
+  .about-primary p,
+  .about-secondary p {
+    font-size: clamp(1rem, 1.35vw, 1.3rem);
+    line-height: 1.02;
+  }
+
+  .about-secondary {
+    top: 0.9rem;
+    left: 50%;
+    width: min(700px, 60vw);
+    gap: 0.95rem;
+  }
+
+  .about-panel {
+    min-height: 180px;
+    padding: 1rem;
+  }
+
+  .about-panel-list li {
+    font-size: clamp(0.92rem, 1.1vw, 1.08rem);
+  }
+}
+
+@media (max-width: 1280px) {
+  .hud-left {
+    max-width: 160px;
+  }
+
+  .hud-left p {
+    display: none;
+  }
+
+  .works-header {
+    width: min(220px, 18vw);
+  }
+
+  .work-stage-visual {
+    width: min(660px, 58vw);
+  }
+
+  .work-copy {
+    width: min(350px, 28vw);
+  }
+
+  .work-copy h3 {
+    font-size: clamp(2.45rem, 5.1vw, 4.4rem);
+  }
+
+  .work-stage-summary {
+    max-width: 26ch;
+  }
+
+  .about-primary {
+    width: min(330px, 26vw);
+  }
+
+  .about-primary h1 {
+    font-size: clamp(3.3rem, 7vw, 5.9rem);
+  }
+
+  .about-secondary {
+    width: min(660px, 62vw);
+  }
+}
+
 @media (max-width: 1080px) {
   .hud-left {
     top: 5.6rem;
@@ -1107,7 +1256,7 @@ button {
   }
 
   .works-page {
-    padding-top: 8.2rem;
+    padding-top: 8rem;
   }
 
   .work-stage-visual {

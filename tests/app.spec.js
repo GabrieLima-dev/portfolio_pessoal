@@ -165,6 +165,58 @@ describe("app", () => {
     expect(wrapper.text()).toContain("[LINKEDIN]");
   });
 
+  it("deve declarar salvaguardas responsivas para viewports intermediárias", () => {
+    const css = readFileSync("src/styles/main.css", "utf8");
+
+    expect(css).toContain("@media (max-width: 1440px)");
+    expect(css).toContain(".about-primary h1");
+    expect(css).toContain("font-size: clamp(3.8rem, 8vw, 6.8rem);");
+    expect(css).toContain("width: min(390px, 30vw);");
+    expect(css).toContain("width: min(700px, 60vw);");
+    expect(css).toContain("left: 50%;");
+  });
+
+  it("deve compactar o entorno de works para reduzir scroll vertical", () => {
+    const css = readFileSync("src/styles/main.css", "utf8");
+
+    expect(css).toContain("padding: 12.6rem clamp(1.1rem, 4vw, 3.1rem) 4.2rem;");
+    expect(css).toContain("min-height: calc(100vh - 17.2rem);");
+    expect(css).toContain("min-height: clamp(320px, 35vw, 430px);");
+    expect(css).toContain("bottom: 1.1rem;");
+  });
+
+  it("deve rebalancear o about para reduzir scroll vertical", () => {
+    const css = readFileSync("src/styles/main.css", "utf8");
+
+    expect(css).toContain("padding: clamp(8.2rem, 11.6vw, 10.8rem) clamp(1.2rem, 4.4vw, 5.2rem) 3.4rem;");
+    expect(css).toContain("min-height: calc(100vh - 14.2rem);");
+    expect(css).toContain("font-size: clamp(3.4rem, 8.2vw, 6.6rem);");
+    expect(css).toContain("width: min(680px, 45vw);");
+    expect(css).toContain("gap: 0.88rem;");
+    expect(css).toContain("min-height: 164px;");
+  });
+
+  it("deve refinar o about com boxes menores e coluna técnica mais alta", () => {
+    const css = readFileSync("src/styles/main.css", "utf8");
+
+    expect(css).toContain("padding: clamp(8.2rem, 11.6vw, 10.8rem) clamp(1.2rem, 4.4vw, 5.2rem) 3.4rem;");
+    expect(css).toContain("top: 0.2rem;");
+    expect(css).toContain("width: min(680px, 45vw);");
+    expect(css).toContain("gap: 0.88rem;");
+    expect(css).toContain("min-height: 164px;");
+    expect(css).toContain("padding: 0.82rem 0.9rem 0.8rem;");
+  });
+
+  it("deve reorganizar os boxes do about com grid mais estável", () => {
+    const css = readFileSync("src/styles/main.css", "utf8");
+
+    expect(css).toContain("left: min(560px, 43vw);");
+    expect(css).toContain("width: min(680px, 45vw);");
+    expect(css).toContain("grid-template-columns: repeat(2, minmax(220px, 1fr));");
+    expect(css).toContain("gap: 0.88rem;");
+    expect(css).toContain("min-height: 164px;");
+  });
+
   it("deve exibir camadas visuais avançadas no shell", async () => {
     const router = createAppRouter();
     const store = createAppStore();
