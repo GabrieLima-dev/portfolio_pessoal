@@ -1,8 +1,12 @@
 <template>
-  <div ref="canvasHost" class="background-canvas" aria-hidden="true"></div>
+  <div class="background-canvas" aria-hidden="true">
+    <img class="background-photo" :src="backgroundImage" alt="" />
+    <div ref="canvasHost" class="background-webgl"></div>
+  </div>
 </template>
 
 <script setup>
+import backgroundImage from "../../background.png";
 import { gsap } from "gsap";
 import * as THREE from "three";
 import { Reflector } from "three/examples/jsm/objects/Reflector.js";

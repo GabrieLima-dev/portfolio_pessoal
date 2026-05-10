@@ -25,6 +25,31 @@ describe("app", () => {
     expect(wrapper.text()).not.toContain("EXPLORE");
   });
 
+  it("deve exibir a radio techno procedural no shell", async () => {
+    const router = createAppRouter();
+    const store = createAppStore();
+
+    await router.push("/works");
+    await router.isReady();
+
+    const wrapper = mount(App, {
+      global: {
+        plugins: [router, store]
+      }
+    });
+
+    expect(wrapper.find("[data-testid='techno-radio']").exists()).toBe(true);
+    expect(wrapper.find(".radio-toggle").exists()).toBe(true);
+    expect(wrapper.find(".radio-panel").exists()).toBe(false);
+
+    await wrapper.find(".radio-toggle").trigger("click");
+
+    expect(wrapper.find(".radio-panel").exists()).toBe(true);
+    expect(wrapper.text()).toContain("GBRL RADIO");
+    expect(wrapper.text()).toContain("lofi techno livre");
+    expect(wrapper.text()).toContain("PLAY");
+  });
+
   it("deve renderizar works como palco visual inspirado no benchmark", async () => {
     const router = createAppRouter();
     const store = createAppStore();
@@ -62,7 +87,7 @@ describe("app", () => {
     const css = readFileSync("src/styles/main.css", "utf8");
     const videoRule = css.match(/\.work-stage-video\s*\{[^}]+\}/)?.[0] ?? "";
 
-    expect(videoRule).toContain("opacity: 0.78");
+    expect(videoRule).toContain("opacity: 0.16");
     expect(css).not.toContain(".work-media-plane::before");
     expect(css).not.toContain(".work-media-plane::after");
     expect(css).not.toContain(".work-stage-video::before");
@@ -159,8 +184,8 @@ describe("app", () => {
 
     expect(wrapper.find("[data-testid='about-editorial']").exists()).toBe(true);
     expect(wrapper.find(".about-content").exists()).toBe(false);
-    expect(wrapper.text()).toContain("Operator dossier");
-    expect(wrapper.findAll(".about-panel").length).toBe(4);
+    expect(wrapper.text()).toContain("Gabriel de Souza Lima");
+    expect(wrapper.findAll(".about-panel").length).toBe(6);
     expect(wrapper.text()).toContain("[GITHUB]");
     expect(wrapper.text()).toContain("[LINKEDIN]");
   });
@@ -193,7 +218,7 @@ describe("app", () => {
     expect(css).toContain("font-size: clamp(3.4rem, 8.2vw, 6.6rem);");
     expect(css).toContain("width: min(680px, 45vw);");
     expect(css).toContain("gap: 0.88rem;");
-    expect(css).toContain("min-height: 164px;");
+    expect(css).toContain("min-height: 186px;");
   });
 
   it("deve refinar o about com boxes menores e coluna técnica mais alta", () => {
@@ -203,18 +228,18 @@ describe("app", () => {
     expect(css).toContain("top: 0.2rem;");
     expect(css).toContain("width: min(680px, 45vw);");
     expect(css).toContain("gap: 0.88rem;");
-    expect(css).toContain("min-height: 164px;");
+    expect(css).toContain("min-height: 186px;");
     expect(css).toContain("padding: 0.82rem 0.9rem 0.8rem;");
   });
 
   it("deve reorganizar os boxes do about com grid mais estável", () => {
     const css = readFileSync("src/styles/main.css", "utf8");
 
-    expect(css).toContain("left: min(560px, 43vw);");
+    expect(css).toContain("left: min(575px, 43vw);");
     expect(css).toContain("width: min(680px, 45vw);");
     expect(css).toContain("grid-template-columns: repeat(2, minmax(220px, 1fr));");
     expect(css).toContain("gap: 0.88rem;");
-    expect(css).toContain("min-height: 164px;");
+    expect(css).toContain("min-height: 186px;");
   });
 
   it("deve exibir camadas visuais avançadas no shell", async () => {
@@ -232,5 +257,27 @@ describe("app", () => {
 
     expect(wrapper.find(".chromatic-layer").exists()).toBe(true);
     expect(wrapper.find(".hud-bars").exists()).toBe(false);
+    expect(wrapper.find("[data-testid='techno-radio']").exists()).toBe(true);
+  });
+
+  it("deve declarar estilos da intro cinematica e do shell carregado", () => {
+    const css = readFileSync("src/styles/main.css", "utf8");
+
+    expect(css).toContain(".intro-overlay");
+    expect(css).toContain(".intro-heartline");
+    expect(css).toContain(".app-shell.is-intro-active .background-canvas");
+    expect(css).toContain(".app-shell.is-loaded .ui-layer");
+    expect(css).toContain("rgba(0, 0, 0, 0.8);");
+    expect(css).toContain("animation: introHeartbeatDraw 3.4s");
+  });
+
+  it("deve manter o background com imagem literal e camada webgl sutil", () => {
+    const backgroundCanvas = readFileSync("src/components/BackgroundCanvas.vue", "utf8");
+    const css = readFileSync("src/styles/main.css", "utf8");
+
+    expect(backgroundCanvas).toContain('import backgroundImage from "../../background.png";');
+    expect(backgroundCanvas).toContain('class="background-photo"');
+    expect(backgroundCanvas).toContain('class="background-webgl"');
+    expect(css).toContain("opacity: 0.08;");
   });
 });

@@ -292,3 +292,27 @@
 - Arquivos alvo: `src/styles/main.css`, `tests/app.spec.js`.
 - Mudança: aumentar discretamente o respiro superior da página, reduzir `top`, `width`, `gap`, `min-height` e `padding` da coluna técnica.
 - Validação: teste automatizado por contrato CSS e inspeção manual.
+
+## 12. Spec - Background Cyber Avenue com Intro
+
+### Escopo técnico
+
+- Origem: `PRD.md` seção 14.
+- Objetivo técnico: substituir a cena base do background por uma avenida cyber 3D mais aderente às referências e adicionar uma intro curta no shell.
+
+### Mudanças planejadas
+
+1. Background scene
+- Arquivos alvo: `src/components/BackgroundCanvas.vue`, `tests/app.spec.js`.
+- Mudança: recriar o canvas com skyline urbano neon, terminais laterais com código animado, forte profundidade de rua e piso glossy reflexivo.
+- Validação: teste automatizado por contrato de componente e revisão visual.
+
+2. Shell intro
+- Arquivos alvo: `src/App.vue`, `src/styles/main.css`, `tests/app.spec.js`.
+- Mudança: adicionar overlay de intro, transição para o estado carregado e estilização do shell durante a abertura.
+- Validação: teste automatizado confirma a intro e os estilos base.
+
+3. Documentação
+- Arquivos alvo: `PRD.md`, `Spec.md`, `README.md`.
+- Mudança: registrar o novo background e a intro cinematográfica.
+- Validação: revisão textual.

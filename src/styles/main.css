@@ -53,10 +53,362 @@ button {
   overflow: hidden;
 }
 
+.app-shell.is-loaded .ui-layer {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
 .background-canvas {
   position: fixed;
   inset: 0;
   z-index: 0;
+  transform-origin: center center;
+  opacity: 1;
+  transition: transform 1.8s cubic-bezier(0.2, 0.7, 0, 1), filter 1.8s cubic-bezier(0.2, 0.7, 0, 1), opacity 1.35s ease;
+  filter: saturate(1.18) contrast(1.08) brightness(0.92);
+  overflow: hidden;
+}
+
+.background-photo,
+.background-webgl,
+.background-webgl canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.background-photo {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(1.04) contrast(1.02) brightness(0.72);
+}
+
+.background-webgl {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.app-shell.is-intro-active .background-canvas {
+  opacity: 1;
+  transform: scale(1.02);
+  filter: saturate(1.2) contrast(1.06) brightness(0.76);
+}
+
+.background-canvas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 82%, rgba(255, 82, 92, 0.16), transparent 28%),
+    radial-gradient(circle at 50% 72%, rgba(110, 236, 255, 0.11), transparent 36%),
+    linear-gradient(180deg, rgba(8, 16, 24, 0.08), rgba(0, 0, 0, 0.28));
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.background-canvas::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 28vh;
+  background:
+    linear-gradient(180deg, transparent, rgba(28, 112, 180, 0.08) 18%, rgba(2, 4, 10, 0.34)),
+    radial-gradient(circle at 50% 4%, rgba(145, 240, 255, 0.2), transparent 34%),
+    linear-gradient(90deg, rgba(255, 64, 92, 0.08), transparent 28%, transparent 72%, rgba(110, 236, 255, 0.08));
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.background-canvas canvas {
+  z-index: 0;
+  opacity: 0.08;
+}
+
+.cinematic-plate {
+  display: none;
+}
+
+.cinematic-haze {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 72%, rgba(160, 224, 255, 0.18), transparent 18%),
+    radial-gradient(circle at 50% 84%, rgba(255, 86, 118, 0.12), transparent 18%),
+    linear-gradient(180deg, rgba(5, 10, 16, 0), rgba(5, 10, 16, 0.22) 58%, rgba(0, 0, 0, 0.4));
+  filter: blur(12px);
+  opacity: 0.96;
+}
+
+.cinematic-rain-sheet {
+  position: absolute;
+  inset: -10% 0;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0 10px,
+      rgba(210, 244, 255, 0.22) 10px 18px,
+      rgba(255, 255, 255, 0) 18px 42px
+    );
+  opacity: 0.18;
+  transform: skewX(-8deg);
+  animation: cinematicRainFall 7s linear infinite;
+}
+
+.cinematic-rain-sheet-soft {
+  opacity: 0.08;
+  filter: blur(2px);
+  animation-duration: 11s;
+  transform: skewX(-5deg) scaleX(1.08);
+}
+
+.cinematic-tower {
+  position: absolute;
+  bottom: 26%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.2rem 0.8rem;
+  background:
+    linear-gradient(180deg, rgba(8, 16, 22, 0.66), rgba(5, 8, 12, 0.9)),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06) 0 1px,
+      transparent 1px 10px
+    );
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 0 60px rgba(0, 0, 0, 0.34);
+}
+
+.cinematic-tower::before,
+.cinematic-tower::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cinematic-tower::before {
+  background:
+    linear-gradient(90deg, rgba(255, 86, 118, 0.18), transparent 10%, transparent 88%, rgba(108, 236, 255, 0.14));
+  opacity: 0.8;
+}
+
+.cinematic-tower::after {
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 255, 255, 0.08), transparent 22%),
+    linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.32));
+}
+
+.cinematic-tower-left {
+  left: 2%;
+  width: min(14vw, 220px);
+  height: 64vh;
+  transform: perspective(800px) rotateY(12deg);
+  opacity: 0.76;
+}
+
+.cinematic-tower-center {
+  left: 50%;
+  width: min(18vw, 300px);
+  height: 86vh;
+  transform: translateX(-50%);
+  opacity: 0.98;
+  box-shadow:
+    0 0 80px rgba(90, 228, 255, 0.12),
+    0 0 90px rgba(255, 86, 118, 0.12);
+}
+
+.cinematic-tower-right {
+  right: 4%;
+  width: min(15vw, 240px);
+  height: 72vh;
+  transform: perspective(900px) rotateY(-10deg);
+  opacity: 0.82;
+}
+
+.cinematic-billboard {
+  position: relative;
+  display: block;
+  min-height: 8vh;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 34px rgba(255, 255, 255, 0.08),
+    inset 0 0 22px rgba(255, 255, 255, 0.08);
+  animation: billboardPulse 4.8s ease-in-out infinite;
+}
+
+.cinematic-billboard:nth-child(2n) {
+  animation-delay: -1.4s;
+}
+
+.cinematic-billboard:nth-child(3n) {
+  animation-delay: -2.6s;
+}
+
+.cinematic-billboard-white {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.78), transparent 38%),
+    linear-gradient(135deg, rgba(176, 235, 255, 0.94), rgba(255, 255, 255, 0.82));
+}
+
+.cinematic-billboard-red {
+  background:
+    radial-gradient(circle at 34% 40%, rgba(255, 236, 236, 0.24), transparent 22%),
+    linear-gradient(135deg, rgba(255, 70, 102, 0.96), rgba(255, 144, 82, 0.74));
+}
+
+.cinematic-billboard-cyan {
+  background:
+    radial-gradient(circle at 66% 28%, rgba(255, 255, 255, 0.22), transparent 18%),
+    linear-gradient(135deg, rgba(116, 244, 255, 0.92), rgba(88, 166, 255, 0.8));
+}
+
+.cinematic-billboard-amber {
+  background:
+    radial-gradient(circle at 60% 34%, rgba(255, 255, 255, 0.22), transparent 18%),
+    linear-gradient(135deg, rgba(255, 198, 66, 0.94), rgba(255, 124, 72, 0.76));
+}
+
+.cinematic-silhouette {
+  position: absolute;
+  bottom: 20%;
+  width: 24px;
+  background: linear-gradient(180deg, rgba(12, 14, 18, 0.12), rgba(4, 4, 6, 0.94));
+  border-radius: 999px 999px 8px 8px;
+  filter: blur(0.4px);
+  opacity: 0.8;
+}
+
+.cinematic-silhouette::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  width: 54px;
+  height: 24px;
+  border-radius: 999px 999px 0 0;
+  background: rgba(7, 9, 12, 0.96);
+  transform: translateX(-50%);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.04);
+}
+
+.cinematic-silhouette-main {
+  left: 50%;
+  height: 112px;
+  transform: translateX(-50%);
+}
+
+.cinematic-silhouette-left {
+  left: 16%;
+  height: 72px;
+  opacity: 0.48;
+}
+
+.cinematic-silhouette-right {
+  right: 12%;
+  height: 82px;
+  opacity: 0.54;
+}
+
+.cinematic-street-glow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 8%;
+  height: 26%;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%),
+    linear-gradient(90deg, rgba(255, 58, 102, 0.18), rgba(116, 238, 255, 0.14), rgba(255, 198, 66, 0.12)),
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.14), transparent 32%);
+  transform: perspective(1200px) rotateX(76deg);
+  filter: blur(8px);
+  opacity: 0.72;
+}
+
+.cinematic-reflection {
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: 1%;
+  height: 20%;
+  background:
+    linear-gradient(180deg, rgba(255, 70, 102, 0.18), rgba(255, 70, 102, 0.02) 32%, transparent 72%),
+    linear-gradient(90deg, rgba(255, 70, 102, 0.12), rgba(118, 236, 255, 0.18), rgba(255, 198, 66, 0.1)),
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.14), transparent 38%);
+  transform: perspective(980px) rotateX(76deg);
+  filter: blur(16px);
+  opacity: 0.86;
+}
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 42, 42, 0.04), transparent 18%),
+    rgba(0, 0, 0, 0.8);
+  animation: introOverlayAuto 4.3s cubic-bezier(0.2, 0.7, 0, 1) forwards;
+}
+
+.intro-heartline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  animation: introHeartlineFade 4.3s ease forwards;
+}
+
+.intro-heartbeat {
+  position: relative;
+  width: min(68vw, 720px);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 80, 80, 0.12) 18%, rgba(255, 72, 72, 0.9) 48%, rgba(255, 72, 72, 0.16) 82%, transparent);
+  box-shadow: 0 0 22px rgba(255, 52, 52, 0.56);
+}
+
+.intro-heartbeat::before {
+  content: "";
+  position: absolute;
+  inset: -14px 0 -14px;
+  background: linear-gradient(
+    90deg,
+    transparent 0 16%,
+    rgba(255, 76, 76, 0.88) 16% 20%,
+    rgba(255, 76, 76, 0.88) 20% 21%,
+    transparent 21% 33%,
+    rgba(255, 76, 76, 0.92) 33% 35%,
+    rgba(255, 76, 76, 0.12) 35% 37%,
+    rgba(255, 76, 76, 0.98) 37% 39%,
+    transparent 39% 100%
+  );
+  clip-path: polygon(
+    0 52%,
+    16% 52%,
+    18% 52%,
+    19.6% 24%,
+    21% 52%,
+    33% 52%,
+    34.6% 4%,
+    36.2% 82%,
+    38% 38%,
+    39.5% 52%,
+    100% 52%,
+    100% 60%,
+    0 60%
+  );
+  filter: drop-shadow(0 0 14px rgba(255, 56, 56, 0.72));
+  animation: introHeartbeatDraw 3.4s cubic-bezier(0.16, 0.76, 0.2, 1) forwards;
 }
 
 .noise-layer,
@@ -71,7 +423,7 @@ button {
 
 .noise-layer {
   z-index: 1;
-  opacity: 0.1;
+  opacity: 0.05;
   background-image: radial-gradient(rgba(255, 255, 255, 0.24) 0.55px, transparent 0.55px);
   background-size: 2px 2px;
   mix-blend-mode: soft-light;
@@ -79,7 +431,7 @@ button {
 
 .scanline-layer {
   z-index: 2;
-  opacity: 0.22;
+  opacity: 0.07;
   background: repeating-linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.08) 0,
@@ -92,27 +444,29 @@ button {
 
 .glitch-layer {
   z-index: 2;
-  opacity: 0.58;
+  opacity: 0.16;
   background:
     linear-gradient(90deg, transparent 0 18%, rgba(255, 0, 51, 0.16) 18.4%, transparent 19%),
-    linear-gradient(110deg, rgba(255, 0, 51, 0.12), transparent 38%),
-    linear-gradient(80deg, rgba(120, 250, 255, 0.06), transparent 58%);
+    linear-gradient(110deg, rgba(255, 0, 51, 0.16), transparent 38%),
+    linear-gradient(80deg, rgba(120, 250, 255, 0.1), transparent 58%);
   mix-blend-mode: screen;
   animation: glitchShift 5.6s ease-in-out infinite;
 }
 
 .chromatic-layer {
   z-index: 3;
-  opacity: 0.22;
+  opacity: 0.13;
   background:
-    linear-gradient(90deg, rgba(255, 0, 51, 0.14), transparent 22%, transparent 78%, rgba(100, 240, 255, 0.08)),
-    radial-gradient(circle at 52% 54%, transparent 34%, rgba(0, 0, 0, 0.74) 100%);
+    linear-gradient(90deg, rgba(255, 0, 51, 0.18), transparent 22%, transparent 78%, rgba(100, 240, 255, 0.12)),
+    radial-gradient(circle at 52% 54%, transparent 34%, rgba(0, 0, 0, 0.7) 100%);
   animation: chromaticPulse 4.4s ease-in-out infinite;
 }
 
 .vignette-layer {
   z-index: 4;
-  background: radial-gradient(circle at 48% 50%, transparent 28%, rgba(0, 0, 0, 0.9) 88%);
+  background:
+    radial-gradient(circle at 50% 48%, transparent 38%, rgba(0, 0, 0, 0.44) 78%, rgba(0, 0, 0, 0.78) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 22%, transparent 68%, rgba(0, 0, 0, 0.34));
 }
 
 .ui-layer {
@@ -120,6 +474,10 @@ button {
   z-index: 5;
   min-height: 100vh;
   padding: 0;
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+  transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
 }
 
 .hud-left,
@@ -175,6 +533,168 @@ button {
   left: 50%;
   z-index: 15;
   transform: translateX(-50%);
+}
+
+.techno-radio {
+  position: fixed;
+  right: clamp(1rem, 3vw, 3rem);
+  bottom: clamp(1rem, 3vw, 2.4rem);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 0.68rem;
+  color: var(--accent);
+  pointer-events: auto;
+}
+
+.radio-toggle {
+  display: flex;
+  width: 3rem;
+  height: 2.5rem;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.58rem 0.62rem;
+  border: 0;
+  border-radius: 8px;
+  color: #000;
+  background: var(--accent);
+  box-shadow:
+    0 0 18px rgba(255, 0, 51, 0.38),
+    0 10px 30px rgba(0, 0, 0, 0.38);
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.radio-toggle.active {
+  animation: radioFloat 1.6s ease-in-out infinite;
+}
+
+.radio-toggle:hover,
+.radio-toggle:focus-visible {
+  filter: brightness(0.9);
+  transform: translateY(-1px);
+}
+
+.radio-eq-bar {
+  width: 0.18rem;
+  min-height: 0.42rem;
+  background: #000;
+  transform-origin: bottom;
+  animation: radioEqualizer 0.82s ease-in-out infinite;
+}
+
+.radio-eq-bar:nth-child(2) {
+  animation-delay: -0.22s;
+}
+
+.radio-eq-bar:nth-child(3) {
+  animation-delay: -0.44s;
+}
+
+.radio-eq-bar:nth-child(4) {
+  animation-delay: -0.12s;
+}
+
+.radio-panel {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 12rem) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.72rem 0.78rem;
+  border: 1px solid rgba(255, 0, 51, 0.32);
+  background:
+    linear-gradient(180deg, rgba(16, 2, 6, 0.74), rgba(4, 2, 4, 0.62)),
+    rgba(0, 0, 0, 0.52);
+  box-shadow:
+    0 0 26px rgba(255, 0, 51, 0.12),
+    inset 0 0 0 1px rgba(255, 0, 51, 0.08);
+  backdrop-filter: blur(8px);
+  animation: radioPanelIn 0.18s ease-out;
+}
+
+.radio-meta,
+.radio-controls,
+.radio-volume {
+  display: flex;
+  align-items: center;
+}
+
+.radio-meta {
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.12rem;
+  text-transform: uppercase;
+}
+
+.radio-kicker,
+.radio-meta span:last-child,
+.radio-volume span {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: rgba(255, 0, 51, 0.68);
+}
+
+.radio-meta strong {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 0.95;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.radio-controls {
+  gap: 0.46rem;
+}
+
+.radio-button,
+.radio-icon-button {
+  border: 0;
+  color: #000;
+  background: var(--accent);
+  font-weight: 900;
+  line-height: 1;
+  transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+}
+
+.radio-button {
+  min-width: 3.7rem;
+  height: 2rem;
+  padding: 0 0.72rem;
+  font-size: 0.82rem;
+}
+
+.radio-button.active {
+  filter: drop-shadow(0 0 12px rgba(255, 0, 51, 0.44));
+}
+
+.radio-icon-button {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  font-size: 1rem;
+}
+
+.radio-button:hover,
+.radio-button:focus-visible,
+.radio-icon-button:hover,
+.radio-icon-button:focus-visible {
+  opacity: 0.82;
+  transform: translateY(-1px);
+}
+
+.radio-volume {
+  gap: 0.34rem;
+}
+
+.radio-volume input {
+  width: 4.8rem;
+  accent-color: var(--accent);
 }
 
 .menu-surface {
@@ -278,12 +798,12 @@ button {
   right: 0;
   bottom: 0;
   z-index: 0;
-  height: 48vh;
+  height: 28vh;
   background:
-    radial-gradient(ellipse at 48% 10%, rgba(255, 0, 51, 0.24), transparent 35%),
-    radial-gradient(ellipse at 78% 24%, rgba(110, 220, 255, 0.14), transparent 30%),
-    linear-gradient(180deg, transparent 0%, rgba(5, 4, 6, 0.52) 22%, rgba(0, 0, 0, 0.96) 78%);
-  transform: perspective(820px) rotateX(66deg) translateY(13vh);
+    radial-gradient(ellipse at 48% 10%, rgba(84, 200, 255, 0.16), transparent 35%),
+    radial-gradient(ellipse at 78% 24%, rgba(180, 112, 255, 0.12), transparent 30%),
+    linear-gradient(180deg, transparent 0%, rgba(5, 4, 6, 0.03) 22%, rgba(0, 0, 0, 0.16) 78%);
+  transform: perspective(820px) rotateX(66deg) translateY(18vh);
   transform-origin: center bottom;
   filter: blur(0.2px);
   pointer-events: none;
@@ -499,7 +1019,7 @@ button {
   transform: perspective(980px) rotateX(64deg);
   transform-origin: center bottom;
   filter: saturate(1.22);
-  opacity: 0.96;
+  opacity: 0.38;
 }
 
 .work-reflective-floor::before {
@@ -568,6 +1088,7 @@ button {
 .work-stage-screen {
   position: relative;
   min-height: clamp(320px, 35vw, 430px);
+  isolation: isolate;
   transform:
     translate3d(var(--panel-shift-x), var(--panel-shift-y), 0)
     rotateY(calc(-3deg + var(--panel-tilt-y)))
@@ -586,12 +1107,12 @@ button {
   bottom: -63%;
   height: 62%;
   background:
-    linear-gradient(180deg, rgba(255, 0, 51, 0.3), rgba(255, 0, 51, 0.1) 38%, transparent 82%),
-    linear-gradient(90deg, rgba(255, 0, 51, 0.22), rgba(80, 210, 255, 0.12), rgba(255, 0, 51, 0.06)),
-    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.1), transparent 48%);
-  filter: blur(9px);
+    linear-gradient(180deg, rgba(255, 0, 51, 0.22), rgba(255, 0, 51, 0.06) 38%, transparent 82%),
+    linear-gradient(90deg, rgba(255, 0, 51, 0.16), rgba(80, 210, 255, 0.14), rgba(255, 0, 51, 0.05)),
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.14), transparent 48%);
+  filter: blur(11px);
   transform: rotateX(72deg) scaleY(-1);
-  opacity: 0.68;
+  opacity: 0.78;
   pointer-events: none;
   -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 76%);
   mask-image: linear-gradient(180deg, #000 0%, transparent 76%);
@@ -605,10 +1126,10 @@ button {
   bottom: -36%;
   height: 42%;
   background:
-    linear-gradient(90deg, transparent, rgba(255, 0, 51, 0.24), transparent),
-    radial-gradient(ellipse at 78% 0%, rgba(110, 230, 255, 0.12), transparent 45%);
-  opacity: 0.36;
-  filter: blur(7px);
+    linear-gradient(90deg, transparent, rgba(255, 0, 51, 0.18), transparent),
+    radial-gradient(ellipse at 78% 0%, rgba(110, 230, 255, 0.18), transparent 45%);
+  opacity: 0.42;
+  filter: blur(10px);
   transform: rotateX(74deg);
   pointer-events: none;
 }
@@ -618,8 +1139,25 @@ button {
   inset: 0;
   overflow: hidden;
   border-radius: 2px;
-  background: #000;
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.58);
+  background:
+    linear-gradient(180deg, rgba(2, 6, 10, 0.08), rgba(2, 4, 8, 0.22)),
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.06), transparent 24%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(2px);
+}
+
+.work-media-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 8, 12, 0.02), rgba(0, 0, 0, 0.14)),
+    radial-gradient(circle at 52% 18%, rgba(255, 86, 118, 0.08), transparent 22%),
+    radial-gradient(circle at 50% 62%, rgba(110, 236, 255, 0.09), transparent 36%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .work-stage-video {
@@ -627,8 +1165,9 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.78;
-  background: #000;
+  opacity: 0.16;
+  filter: saturate(0.8) contrast(1.04) brightness(0.72);
+  background: transparent;
 }
 
 .work-floor-reflection {
@@ -638,10 +1177,10 @@ button {
   bottom: -68%;
   height: 58%;
   background:
-    linear-gradient(180deg, rgba(255, 0, 51, 0.22), rgba(255, 0, 51, 0.05) 42%, transparent 78%),
-    linear-gradient(135deg, rgba(255, 0, 51, 0.32), rgba(80, 210, 255, 0.13), transparent 72%);
-  filter: blur(12px);
-  opacity: 0.58;
+    linear-gradient(180deg, rgba(255, 0, 51, 0.18), rgba(255, 0, 51, 0.04) 42%, transparent 78%),
+    linear-gradient(135deg, rgba(255, 0, 51, 0.24), rgba(80, 210, 255, 0.16), transparent 72%);
+  filter: blur(16px);
+  opacity: 0.72;
   transform: rotateX(72deg) scaleY(-1);
   pointer-events: none;
   -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
@@ -659,7 +1198,9 @@ button {
   z-index: 2;
   width: min(460px, 62vw);
   color: var(--accent);
-  text-shadow: 0 0 20px rgba(0, 0, 0, 0.82);
+  text-shadow:
+    0 0 20px rgba(0, 0, 0, 0.82),
+    0 0 36px rgba(0, 0, 0, 0.48);
 }
 
 .work-stage-role {
@@ -853,7 +1394,7 @@ button {
 }
 
 .about-primary {
-  width: min(520px, 39vw);
+  width: min(540px, 39vw);
 }
 
 .about-kicker {
@@ -881,10 +1422,52 @@ button {
   line-height: 1.0;
 }
 
+.about-summary {
+  max-width: 24ch;
+}
+
+.about-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 0.75rem;
+  width: min(500px, 100%);
+  margin-top: 1.5rem;
+}
+
+.about-stat {
+  min-height: 92px;
+  padding: 0.82rem 0.9rem 0.76rem;
+  border: 1px solid rgba(255, 0, 51, 0.18);
+  background:
+    linear-gradient(180deg, rgba(22, 2, 6, 0.74), rgba(7, 2, 4, 0.54)),
+    rgba(0, 0, 0, 0.42);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 0, 51, 0.06),
+    0 0 18px rgba(255, 0, 51, 0.08);
+}
+
+.about-stat-label {
+  margin: 0 0 0.5rem;
+  color: rgba(255, 0, 51, 0.64);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about-stat-value {
+  margin: 0;
+  color: rgba(255, 0, 51, 0.92);
+  font-size: clamp(0.94rem, 1.1vw, 1.08rem);
+  font-weight: 700;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
 .about-secondary {
   position: absolute;
   top: 0.2rem;
-  left: min(560px, 43vw);
+  left: min(575px, 43vw);
   width: min(680px, 45vw);
   display: grid;
   grid-template-columns: repeat(2, minmax(220px, 1fr));
@@ -892,7 +1475,7 @@ button {
 }
 
 .about-panel {
-  min-height: 164px;
+  min-height: 186px;
   padding: 0.82rem 0.9rem 0.8rem;
   border: 1px solid rgba(255, 0, 51, 0.2);
   background:
@@ -985,6 +1568,17 @@ button {
   transform: translateX(26px);
 }
 
+.intro-fade-enter-active,
+.intro-fade-leave-active {
+  transition: opacity 0.55s ease, filter 0.55s ease;
+}
+
+.intro-fade-enter-from,
+.intro-fade-leave-to {
+  opacity: 0;
+  filter: blur(12px);
+}
+
 @keyframes scanMove {
   from {
     transform: translateY(0);
@@ -1014,6 +1608,100 @@ button {
   }
   50% {
     opacity: 0.28;
+  }
+}
+
+@keyframes introOverlayAuto {
+  0%,
+  84% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes introHeartbeatDraw {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.08);
+    transform-origin: center center;
+  }
+  26% {
+    opacity: 1;
+    transform: scaleX(0.34);
+  }
+  72% {
+    opacity: 1;
+    transform: scaleX(0.82);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes introHeartlineFade {
+  0%,
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cinematicRainFall {
+  from {
+    transform: skewX(-8deg) translateY(-4%);
+  }
+  to {
+    transform: skewX(-8deg) translateY(4%);
+  }
+}
+
+@keyframes billboardPulse {
+  0%,
+  100% {
+    filter: saturate(1) brightness(0.96);
+    opacity: 0.92;
+  }
+  50% {
+    filter: saturate(1.18) brightness(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes radioFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes radioEqualizer {
+  0%,
+  100% {
+    transform: scaleY(0.42);
+  }
+  50% {
+    transform: scaleY(1.55);
+  }
+}
+
+@keyframes radioPanelIn {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -1175,6 +1863,10 @@ button {
     line-height: 1.02;
   }
 
+  .about-stat-value {
+    font-size: clamp(0.86rem, 0.96vw, 1rem);
+  }
+
   .about-secondary {
     top: 0.9rem;
     left: 50%;
@@ -1229,6 +1921,10 @@ button {
     font-size: clamp(3.3rem, 7vw, 5.9rem);
   }
 
+  .about-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
   .about-secondary {
     width: min(660px, 62vw);
   }
@@ -1275,6 +1971,10 @@ button {
   .about-secondary {
     left: 52vw;
     width: 40vw;
+  }
+
+  .about-stat-grid {
+    width: min(420px, 100%);
   }
 }
 
@@ -1323,6 +2023,31 @@ button {
 
   .hud-debug {
     display: none;
+  }
+
+  .techno-radio {
+    right: 0.9rem;
+    left: auto;
+    bottom: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .radio-panel {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.55rem);
+    width: min(18rem, calc(100vw - 1.8rem));
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+    padding: 0.65rem;
+  }
+
+  .radio-controls {
+    justify-content: space-between;
+  }
+
+  .radio-volume input {
+    width: min(7rem, 30vw);
   }
 
   .works-page {
@@ -1435,6 +2160,15 @@ button {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.8rem;
+  }
+
+  .about-stat-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .about-stat {
+    min-height: auto;
   }
 
   .about-panel {

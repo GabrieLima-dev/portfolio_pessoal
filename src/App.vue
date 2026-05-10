@@ -28,6 +28,8 @@
         </Transition>
       </RouterView>
     </div>
+
+    <TechnoRadio />
   </div>
 </template>
 
@@ -35,6 +37,7 @@
 import { gsap } from "gsap";
 import { RouterView } from "vue-router";
 import BackgroundCanvas from "./components/BackgroundCanvas.vue";
+import TechnoRadio from "./components/TechnoRadio.vue";
 import TopMenu from "./components/TopMenu.vue";
 
 function onBeforeEnter(el) {

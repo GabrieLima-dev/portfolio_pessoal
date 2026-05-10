@@ -259,3 +259,26 @@
 1. RF-17: About com boxes mais compactos e coluna mais alta
 - Regra: reduzir mais a altura e o padding dos boxes e posicionar a coluna técnica mais para cima.
 - Evidência: validação CSS e inspeção manual de `About`.
+
+## 14. PRD - Background Cyber Avenue com Intro
+
+> Objetivo: substituir o fundo base por uma avenida cyber tridimensional com skyline neon, terminais com código animado, piso reflexivo brilhante e intro de abertura antes da interface principal.
+
+### Contexto e evidências
+
+- Referências visuais aprovadas pelo usuário: sala gamer/cyber em vermelho e preto, operador com capuz e skyline/hacker mood.
+- Restrição confirmada: manter os elementos flutuantes atuais do shell e mudar apenas a cena de fundo e a experiência de entrada.
+
+### Requisitos funcionais adicionais
+
+1. RF-18: Fundo cyber avenue narrativo
+- Regra: renderizar uma cena de fundo com avenida neon, prédios altos, terminais com códigos animados e atmosfera escura cyan/laranja.
+- Evidência: validação visual e contrato do componente de background.
+
+2. RF-19: Piso glossy reflexivo de avenida
+- Regra: a parte inferior do fundo deve ter leitura de piso brilhante com reflexo forte, linhas de fuga e aparência de rua polida futurista.
+- Evidência: validação visual e presença do sistema de piso no componente de background.
+
+3. RF-20: Intro cinematográfica de carregamento
+- Regra: antes da UI principal, o site deve exibir uma abertura curta com linguagem visual coerente com a cena.
+- Evidência: teste de shell confirma presença da intro e do estado carregado.

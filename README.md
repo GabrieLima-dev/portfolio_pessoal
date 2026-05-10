@@ -79,6 +79,12 @@ Apresentar os projetos de Gabriel Lima em uma experiência web moderna, responsi
 - O bloco principal do título ganhou mais respiro superior para descer um pouco na composição.
 - `Works` continuou sem alterações nesse refinamento.
 
+## Background cyber avenue
+
+- O fundo base agora usa uma cena 3D de avenida cyber com skyline neon, profundidade urbana e terminais laterais exibindo códigos coloridos animados.
+- A parte inferior do cenário recebeu um piso glossy reflexivo com linhas de fuga luminosas para reforçar a leitura de rua futurista.
+- O shell ganhou uma intro cinematográfica curta antes de revelar a interface principal.
+
 
 ## Conteúdo atual (fase 1)
 
