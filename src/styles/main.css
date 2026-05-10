@@ -3,11 +3,11 @@
 :root {
   color-scheme: dark;
   --bg: #000;
-  --text: #ff0033;
-  --muted: rgba(255, 0, 51, 0.7);
-  --dim: rgba(255, 0, 51, 0.38);
-  --accent: #ff0033;
-  --accent-soft: rgba(255, 0, 51, 0.58);
+  --text: #f5f7fb;
+  --muted: rgba(245, 247, 251, 0.78);
+  --dim: rgba(245, 247, 251, 0.48);
+  --accent: #7fd6ff;
+  --accent-soft: rgba(127, 214, 255, 0.58);
   --cold-light: rgba(160, 255, 255, 0.42);
 }
 
@@ -44,6 +44,12 @@ a {
 
 button {
   cursor: pointer;
+}
+
+#vlibras-root,
+#vlibras-root [vw-access-button],
+#vlibras-root [vw-plugin-wrapper] {
+  z-index: 140 !important;
 }
 
 .app-shell {
@@ -490,29 +496,28 @@ button {
 
 .hud-left {
   position: fixed;
-  top: clamp(1.2rem, 4.9vw, 3.1rem);
+  top: 1.1rem;
   left: clamp(1.2rem, 3.8vw, 3.15rem);
   z-index: 12;
-  max-width: 270px;
-  color: var(--accent);
+  display: flex;
+  align-items: center;
+  color: var(--text);
   text-transform: uppercase;
-  text-shadow: 0 0 18px rgba(255, 0, 51, 0.34);
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.14);
+  transform: none;
+  pointer-events: none;
 }
 
 .hud-left h1 {
   margin: 0;
-  line-height: 0.9;
-  font-size: clamp(2.15rem, 4.4vw, 4.4rem);
+  line-height: 1;
+  font-size: clamp(1.15rem, 2vw, 1.8rem);
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
 }
 
 .hud-left p {
-  margin: 0.42rem 0 0;
-  max-width: 220px;
-  font-size: clamp(0.72rem, 1.1vw, 0.92rem);
-  line-height: 1.08;
-  letter-spacing: 0.03em;
+  display: none;
 }
 
 .hud-debug {
@@ -523,7 +528,7 @@ button {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.68rem;
   letter-spacing: 0.04em;
-  color: var(--accent);
+  color: var(--text);
   opacity: 0.86;
 }
 
@@ -542,27 +547,31 @@ button {
   z-index: 80;
   display: flex;
   align-items: center;
-  gap: 0.68rem;
-  color: var(--accent);
+  gap: 0.82rem;
+  color: var(--text);
   pointer-events: auto;
 }
 
 .radio-toggle {
+  position: relative;
   display: flex;
-  width: 3rem;
-  height: 2.5rem;
+  width: 3.15rem;
+  height: 3.15rem;
   align-items: flex-end;
   justify-content: center;
-  gap: 0.2rem;
-  padding: 0.58rem 0.62rem;
-  border: 0;
-  border-radius: 8px;
-  color: #000;
-  background: var(--accent);
+  gap: 0.22rem;
+  padding: 0.72rem 0.7rem;
+  border: 1px solid rgba(145, 228, 255, 0.28);
+  border-radius: 18px;
+  color: #03111b;
+  background:
+    linear-gradient(180deg, rgba(170, 235, 255, 0.96), rgba(110, 206, 255, 0.92)),
+    rgba(127, 214, 255, 0.92);
   box-shadow:
-    0 0 18px rgba(255, 0, 51, 0.38),
-    0 10px 30px rgba(0, 0, 0, 0.38);
-  transition: transform 0.18s ease, filter 0.18s ease;
+    0 14px 34px rgba(0, 0, 0, 0.34),
+    0 0 24px rgba(115, 226, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
 }
 
 .radio-toggle.active {
@@ -571,16 +580,26 @@ button {
 
 .radio-toggle:hover,
 .radio-toggle:focus-visible {
-  filter: brightness(0.9);
-  transform: translateY(-1px);
+  filter: brightness(1.02);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.36),
+    0 0 28px rgba(115, 226, 255, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .radio-eq-bar {
   width: 0.18rem;
-  min-height: 0.42rem;
-  background: #000;
+  height: 1rem;
+  background: #072133;
+  border-radius: 999px;
   transform-origin: bottom;
   animation: radioEqualizer 0.82s ease-in-out infinite;
+}
+
+.radio-toggle:not(.active) .radio-eq-bar {
+  animation: radioEqualizerStop 2.4s cubic-bezier(0.18, 0.72, 0.2, 1) forwards;
+  opacity: 0.9;
 }
 
 .radio-eq-bar:nth-child(2) {
@@ -597,18 +616,20 @@ button {
 
 .radio-panel {
   display: grid;
-  grid-template-columns: minmax(8.5rem, 12rem) auto;
-  gap: 0.75rem;
+  grid-template-columns: minmax(9.5rem, 12.8rem) auto;
+  gap: 0.9rem;
   align-items: center;
-  padding: 0.72rem 0.78rem;
-  border: 1px solid rgba(255, 0, 51, 0.32);
+  padding: 0.92rem 1rem;
+  border: 1px solid rgba(127, 214, 255, 0.22);
+  border-radius: 22px;
   background:
-    linear-gradient(180deg, rgba(16, 2, 6, 0.74), rgba(4, 2, 4, 0.62)),
-    rgba(0, 0, 0, 0.52);
+    linear-gradient(180deg, rgba(8, 18, 28, 0.88), rgba(4, 10, 18, 0.74)),
+    rgba(0, 0, 0, 0.56);
   box-shadow:
-    0 0 26px rgba(255, 0, 51, 0.12),
-    inset 0 0 0 1px rgba(255, 0, 51, 0.08);
-  backdrop-filter: blur(8px);
+    0 18px 44px rgba(0, 0, 0, 0.42),
+    0 0 30px rgba(90, 214, 255, 0.12),
+    inset 0 0 0 1px rgba(170, 236, 255, 0.04);
+  backdrop-filter: blur(14px);
   animation: radioPanelIn 0.18s ease-out;
 }
 
@@ -623,7 +644,7 @@ button {
   min-width: 0;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.12rem;
+  gap: 0.18rem;
   text-transform: uppercase;
 }
 
@@ -634,48 +655,61 @@ button {
   font-size: 0.58rem;
   line-height: 1;
   letter-spacing: 0.04em;
-  color: rgba(255, 0, 51, 0.68);
+  color: var(--muted);
 }
 
 .radio-meta strong {
   max-width: 100%;
   overflow: hidden;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 800;
   line-height: 0.95;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: 0.03em;
 }
 
 .radio-controls {
-  gap: 0.46rem;
+  gap: 0.5rem;
 }
 
 .radio-button,
 .radio-icon-button {
-  border: 0;
-  color: #000;
-  background: var(--accent);
+  border: 1px solid rgba(136, 226, 255, 0.2);
+  color: var(--text);
+  background:
+    linear-gradient(180deg, rgba(18, 42, 58, 0.82), rgba(9, 22, 34, 0.78)),
+    rgba(7, 15, 22, 0.74);
   font-weight: 900;
   line-height: 1;
-  transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 8px 20px rgba(0, 0, 0, 0.22);
+  transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
 .radio-button {
-  min-width: 3.7rem;
-  height: 2rem;
-  padding: 0 0.72rem;
-  font-size: 0.82rem;
+  min-width: 4.2rem;
+  height: 2.2rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
 }
 
 .radio-button.active {
-  filter: drop-shadow(0 0 12px rgba(255, 0, 51, 0.44));
+  border-color: rgba(150, 232, 255, 0.42);
+  background:
+    linear-gradient(180deg, rgba(115, 215, 255, 0.28), rgba(24, 64, 88, 0.82)),
+    rgba(8, 18, 28, 0.82);
+  filter: drop-shadow(0 0 14px rgba(115, 226, 255, 0.22));
 }
 
 .radio-icon-button {
   display: grid;
-  width: 2rem;
-  height: 2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
   place-items: center;
   font-size: 1rem;
 }
@@ -684,17 +718,19 @@ button {
 .radio-button:focus-visible,
 .radio-icon-button:hover,
 .radio-icon-button:focus-visible {
-  opacity: 0.82;
+  opacity: 1;
   transform: translateY(-1px);
+  border-color: rgba(155, 232, 255, 0.34);
+  filter: brightness(1.04);
 }
 
 .radio-volume {
-  gap: 0.34rem;
+  gap: 0.46rem;
 }
 
 .radio-volume input {
-  width: 4.8rem;
-  accent-color: var(--accent);
+  width: 5.8rem;
+  accent-color: #8be0ff;
 }
 
 .menu-surface {
@@ -721,7 +757,7 @@ button {
   border: 0;
   border-radius: 999px;
   padding: 0 1.1rem;
-  color: var(--accent);
+  color: var(--text);
   background: transparent;
   text-decoration: none;
   text-transform: uppercase;
@@ -738,7 +774,7 @@ button {
 .menu-pill:hover,
 .menu-pill:focus-visible,
 .menu-pill.active {
-  color: #000;
+  color: #fff;
   background: var(--accent);
   outline: none;
   transform: translateY(-1px);
@@ -756,7 +792,7 @@ button {
   left: clamp(1.2rem, 3.8vw, 3.15rem);
   z-index: 8;
   width: min(330px, 32vw);
-  color: var(--accent);
+  color: var(--text);
   pointer-events: none;
 }
 
@@ -865,12 +901,12 @@ button {
     linear-gradient(115deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.66)),
     radial-gradient(circle at 22% 24%, rgba(255, 245, 255, 0.26), transparent 15%),
     radial-gradient(circle at 68% 38%, rgba(105, 220, 255, 0.2), transparent 19%),
-    linear-gradient(135deg, rgba(255, 0, 51, 0.24), rgba(13, 28, 31, 0.82));
+    linear-gradient(135deg, rgba(110, 236, 255, 0.16), rgba(13, 28, 31, 0.82));
   color: rgba(225, 255, 255, 0.78);
   box-shadow:
     0 0 48px rgba(90, 245, 255, 0.16),
     0 26px 60px rgba(0, 0, 0, 0.6),
-    inset 0 0 32px rgba(255, 0, 51, 0.12);
+    inset 0 0 32px rgba(110, 236, 255, 0.08);
   opacity: 0.54;
   transform-style: preserve-3d;
   transform:
@@ -884,6 +920,7 @@ button {
 
 .work-video-panel::before,
 .work-video-panel::after,
+.work-video-panel-media,
 .work-video-noise {
   content: "";
   position: absolute;
@@ -891,11 +928,20 @@ button {
   pointer-events: none;
 }
 
+.work-video-panel-media {
+  background:
+    linear-gradient(180deg, rgba(4, 8, 12, 0.06), rgba(0, 0, 0, 0.34)),
+    var(--panel-image) center / cover no-repeat;
+  opacity: 0.88;
+  filter: saturate(0.84) contrast(1.06) brightness(0.74);
+  transform: scale(1.01);
+}
+
 .work-video-panel::before {
   background:
     linear-gradient(115deg, transparent 0 28%, rgba(255, 255, 255, 0.16) 29%, transparent 30%),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.09) 0 1px, transparent 1px 5px),
-    repeating-linear-gradient(90deg, transparent 0 18px, rgba(255, 0, 51, 0.1) 19px 20px, transparent 21px 42px);
+    repeating-linear-gradient(90deg, transparent 0 18px, rgba(110, 236, 255, 0.08) 19px 20px, transparent 21px 42px);
   mix-blend-mode: screen;
   opacity: 0.58;
 }
@@ -910,7 +956,7 @@ button {
   background:
     radial-gradient(circle at 18% 48%, rgba(255, 225, 255, 0.32), transparent 10%),
     radial-gradient(circle at 62% 30%, rgba(130, 220, 255, 0.2), transparent 14%),
-    radial-gradient(circle at 78% 74%, rgba(255, 0, 51, 0.22), transparent 18%),
+    radial-gradient(circle at 78% 74%, rgba(110, 236, 255, 0.16), transparent 18%),
     repeating-linear-gradient(95deg, transparent 0 16px, rgba(255, 255, 255, 0.07) 17px 18px);
   opacity: 0.76;
   filter: saturate(0.42) contrast(1.32);
@@ -920,7 +966,7 @@ button {
 .panel-poster .work-video-noise {
   background:
     radial-gradient(ellipse at 28% 28%, rgba(250, 220, 255, 0.34), transparent 16%),
-    radial-gradient(ellipse at 56% 70%, rgba(255, 0, 51, 0.26), transparent 18%),
+    radial-gradient(ellipse at 56% 70%, rgba(110, 236, 255, 0.16), transparent 18%),
     linear-gradient(120deg, transparent 0 42%, rgba(40, 170, 255, 0.2) 43%, transparent 45%),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 6px);
 }
@@ -930,7 +976,7 @@ button {
     radial-gradient(circle at 26% 38%, rgba(115, 255, 255, 0.28), transparent 12%),
     linear-gradient(90deg, transparent 0 58%, rgba(255, 255, 255, 0.14) 59% 60%, transparent 61%),
     repeating-linear-gradient(0deg, transparent 0 11px, rgba(130, 245, 255, 0.12) 12px 13px, transparent 14px 21px),
-    repeating-linear-gradient(90deg, transparent 0 24px, rgba(255, 0, 51, 0.12) 25px 27px, transparent 28px 54px);
+    repeating-linear-gradient(90deg, transparent 0 24px, rgba(110, 236, 255, 0.08) 25px 27px, transparent 28px 54px);
 }
 
 .panel-grid .work-video-noise {
@@ -955,7 +1001,7 @@ button {
 .work-video-panel span {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.58rem;
-  color: var(--accent);
+  color: var(--muted);
 }
 
 .work-video-panel strong {
@@ -983,11 +1029,11 @@ button {
 }
 
 .panel-red {
-  border-color: rgba(255, 0, 51, 0.32);
+  border-color: rgba(110, 236, 255, 0.24);
   box-shadow:
-    0 0 60px rgba(255, 0, 51, 0.18),
+    0 0 60px rgba(110, 236, 255, 0.12),
     0 26px 60px rgba(0, 0, 0, 0.6),
-    inset 0 0 32px rgba(255, 0, 51, 0.16);
+    inset 0 0 32px rgba(110, 236, 255, 0.1);
 }
 
 .panel-cyan {
@@ -1012,10 +1058,8 @@ button {
   overflow: hidden;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255, 0, 51, 0.08), transparent 22%),
-    radial-gradient(ellipse at 39% 0%, rgba(255, 0, 51, 0.32), transparent 36%),
-    radial-gradient(ellipse at 78% 12%, rgba(90, 220, 255, 0.14), transparent 31%),
-    linear-gradient(180deg, rgba(8, 8, 11, 0.1), rgba(0, 0, 0, 0.92) 65%, #000 100%);
+    radial-gradient(ellipse at 78% 12%, rgba(90, 220, 255, 0.1), transparent 31%),
+    linear-gradient(180deg, rgba(8, 8, 11, 0.06), rgba(0, 0, 0, 0.92) 65%, #000 100%);
   transform: perspective(980px) rotateX(64deg);
   transform-origin: center bottom;
   filter: saturate(1.22);
@@ -1027,8 +1071,8 @@ button {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, transparent 0 22%, rgba(255, 0, 51, 0.18) 24%, transparent 29% 62%, rgba(120, 230, 255, 0.1) 66%, transparent 72%),
-    radial-gradient(ellipse at 50% 2%, rgba(255, 255, 255, 0.13), transparent 28%);
+    linear-gradient(90deg, transparent 0 24%, rgba(120, 230, 255, 0.08) 36%, transparent 48% 62%, rgba(120, 230, 255, 0.08) 70%, transparent 78%),
+    radial-gradient(ellipse at 50% 2%, rgba(255, 255, 255, 0.09), transparent 28%);
   filter: blur(14px);
   opacity: 0.72;
 }
@@ -1052,10 +1096,10 @@ button {
   height: clamp(58px, 7vw, 128px);
   border-radius: 2px;
   background:
-    linear-gradient(180deg, rgba(255, 0, 51, 0.24), rgba(255, 0, 51, 0.05) 38%, transparent),
-    radial-gradient(ellipse at 32% 18%, rgba(255, 225, 255, 0.18), transparent 35%),
-    radial-gradient(ellipse at 68% 16%, rgba(100, 220, 255, 0.12), transparent 32%);
-  opacity: 0.35;
+    linear-gradient(180deg, rgba(110, 236, 255, 0.12), rgba(110, 236, 255, 0.02) 38%, transparent),
+    radial-gradient(ellipse at 32% 18%, rgba(255, 255, 255, 0.12), transparent 35%),
+    radial-gradient(ellipse at 68% 16%, rgba(100, 220, 255, 0.1), transparent 32%);
+  opacity: 0.18;
   filter: blur(10px);
   transform: translateX(-50%) scaleX(var(--reflection-scale, 1)) scaleY(-1);
   animation: floorReflectionPulse 4.8s ease-in-out infinite;
@@ -1064,16 +1108,7 @@ button {
 }
 
 .floor-stage-reflection {
-  left: 50%;
-  top: 0;
-  width: min(820px, 58vw);
-  height: 190px;
-  background:
-    linear-gradient(180deg, rgba(255, 0, 51, 0.34), rgba(255, 0, 51, 0.12) 35%, transparent 82%),
-    linear-gradient(90deg, rgba(255, 0, 51, 0.26), rgba(100, 210, 255, 0.15), rgba(255, 0, 51, 0.08)),
-    radial-gradient(ellipse at 62% 12%, rgba(255, 255, 255, 0.12), transparent 36%);
-  opacity: 0.54;
-  filter: blur(12px);
+  display: none;
 }
 
 .work-stage-visual {
@@ -1107,12 +1142,12 @@ button {
   bottom: -63%;
   height: 62%;
   background:
-    linear-gradient(180deg, rgba(255, 0, 51, 0.22), rgba(255, 0, 51, 0.06) 38%, transparent 82%),
-    linear-gradient(90deg, rgba(255, 0, 51, 0.16), rgba(80, 210, 255, 0.14), rgba(255, 0, 51, 0.05)),
-    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.14), transparent 48%);
+    linear-gradient(180deg, rgba(110, 236, 255, 0.1), rgba(110, 236, 255, 0.02) 38%, transparent 82%),
+    linear-gradient(90deg, rgba(80, 210, 255, 0.1), rgba(80, 210, 255, 0.1), rgba(80, 210, 255, 0.03)),
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.12), transparent 48%);
   filter: blur(11px);
   transform: rotateX(72deg) scaleY(-1);
-  opacity: 0.78;
+  opacity: 0.22;
   pointer-events: none;
   -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 76%);
   mask-image: linear-gradient(180deg, #000 0%, transparent 76%);
@@ -1126,9 +1161,9 @@ button {
   bottom: -36%;
   height: 42%;
   background:
-    linear-gradient(90deg, transparent, rgba(255, 0, 51, 0.18), transparent),
-    radial-gradient(ellipse at 78% 0%, rgba(110, 230, 255, 0.18), transparent 45%);
-  opacity: 0.42;
+    linear-gradient(90deg, transparent, rgba(110, 230, 255, 0.08), transparent),
+    radial-gradient(ellipse at 78% 0%, rgba(110, 230, 255, 0.12), transparent 45%);
+  opacity: 0.18;
   filter: blur(10px);
   transform: rotateX(74deg);
   pointer-events: none;
@@ -1140,8 +1175,8 @@ button {
   overflow: hidden;
   border-radius: 2px;
   background:
-    linear-gradient(180deg, rgba(2, 6, 10, 0.08), rgba(2, 4, 8, 0.22)),
-    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.06), transparent 24%);
+    linear-gradient(180deg, rgba(2, 6, 10, 0.02), rgba(2, 4, 8, 0.08)),
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.08), transparent 24%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
     0 28px 70px rgba(0, 0, 0, 0.42),
@@ -1161,30 +1196,33 @@ button {
 }
 
 .work-stage-video {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.16;
-  filter: saturate(0.8) contrast(1.04) brightness(0.72);
+  opacity: 0;
+  filter: saturate(0.96) contrast(1.08) brightness(0.9);
   background: transparent;
+  transition: opacity 220ms ease, filter 220ms ease;
+}
+
+.work-stage-video.is-ready {
+  opacity: 0.8;
+}
+
+.work-stage-video-preview {
+  opacity: 0.28;
+  filter: blur(0.2px) saturate(0.8) contrast(1.02) brightness(0.8);
+}
+
+.work-stage-video-preview.is-hidden {
+  opacity: 0;
 }
 
 .work-floor-reflection {
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  bottom: -68%;
-  height: 58%;
-  background:
-    linear-gradient(180deg, rgba(255, 0, 51, 0.18), rgba(255, 0, 51, 0.04) 42%, transparent 78%),
-    linear-gradient(135deg, rgba(255, 0, 51, 0.24), rgba(80, 210, 255, 0.16), transparent 72%);
-  filter: blur(16px);
-  opacity: 0.72;
-  transform: rotateX(72deg) scaleY(-1);
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
-  mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+  display: none;
 }
 
 .work-stage-screen-sdr-virtual .work-media-plane {
@@ -1197,7 +1235,7 @@ button {
   bottom: clamp(5rem, 8vw, 7.2rem);
   z-index: 2;
   width: min(460px, 62vw);
-  color: var(--accent);
+  color: var(--text);
   text-shadow:
     0 0 20px rgba(0, 0, 0, 0.82),
     0 0 36px rgba(0, 0, 0, 0.48);
@@ -1221,7 +1259,7 @@ button {
 .work-stage-summary {
   margin: 0.72rem 0 0;
   max-width: 34ch;
-  color: rgba(255, 0, 51, 0.9);
+  color: var(--muted);
   font-size: clamp(1rem, 1.7vw, 1.35rem);
   font-weight: 600;
   line-height: 1.04;
@@ -1240,7 +1278,7 @@ button {
 .about-links a {
   border: 0;
   border-radius: 999px;
-  color: #000;
+  color: #fff;
   background: var(--accent);
   text-decoration: none;
   font-weight: 800;
@@ -1278,7 +1316,7 @@ button {
   width: min(360px, 46vw);
   padding: 0.82rem;
   background: rgba(0, 0, 0, 0.78);
-  color: rgba(255, 0, 51, 0.86);
+  color: var(--text);
   font-size: 0.92rem;
   line-height: 1.08;
 }
@@ -1310,7 +1348,7 @@ button {
   display: flex;
   align-items: center;
   gap: 0.38rem;
-  color: var(--accent);
+  color: var(--text);
   font-size: 0.82rem;
   font-weight: 700;
 }
@@ -1364,7 +1402,7 @@ button {
   opacity: 1;
   font-size: 0.82rem;
   line-height: 1.95rem;
-  color: #000;
+  color: #fff;
 }
 
 .about-page {
@@ -1375,7 +1413,7 @@ button {
 .about-editorial {
   position: relative;
   min-height: calc(100vh - 14.2rem);
-  color: var(--accent);
+  color: var(--text);
 }
 
 .about-editorial::before {
@@ -1393,8 +1431,23 @@ button {
   pointer-events: none;
 }
 
+.about-editorial::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: min(240px, 24vh);
+  background: url("../../assets/fumaca-animation-gif.webp") center bottom / cover no-repeat;
+  opacity: 0.045;
+  filter: blur(8px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: smokeDrift 24s linear infinite;
+}
+
 .about-primary {
-  width: min(540px, 39vw);
+  width: min(620px, 42vw);
 }
 
 .about-kicker {
@@ -1411,19 +1464,22 @@ button {
   font-weight: 700;
   line-height: 0.88;
   text-transform: uppercase;
+  max-width: 10ch;
 }
 
 .about-primary p,
 .about-secondary p {
   margin: 0 0 clamp(1.2rem, 2.7vw, 2.7rem);
-  color: rgba(255, 0, 51, 0.86);
+  color: var(--muted);
   font-size: clamp(1.18rem, 1.7vw, 1.72rem);
   font-weight: 600;
   line-height: 1.0;
 }
 
-.about-summary {
-  max-width: 24ch;
+.about-lead {
+  max-width: 32ch;
+  font-size: clamp(1rem, 1.34vw, 1.28rem);
+  line-height: 1.02;
 }
 
 .about-stat-grid {
@@ -1437,18 +1493,18 @@ button {
 .about-stat {
   min-height: 92px;
   padding: 0.82rem 0.9rem 0.76rem;
-  border: 1px solid rgba(255, 0, 51, 0.18);
+  border: 1px solid rgba(127, 214, 255, 0.18);
   background:
-    linear-gradient(180deg, rgba(22, 2, 6, 0.74), rgba(7, 2, 4, 0.54)),
+    linear-gradient(180deg, rgba(10, 20, 30, 0.74), rgba(5, 10, 16, 0.54)),
     rgba(0, 0, 0, 0.42);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 0, 51, 0.06),
-    0 0 18px rgba(255, 0, 51, 0.08);
+    inset 0 0 0 1px rgba(127, 214, 255, 0.06),
+    0 0 18px rgba(127, 214, 255, 0.08);
 }
 
 .about-stat-label {
   margin: 0 0 0.5rem;
-  color: rgba(255, 0, 51, 0.64);
+  color: var(--dim);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1457,7 +1513,7 @@ button {
 
 .about-stat-value {
   margin: 0;
-  color: rgba(255, 0, 51, 0.92);
+  color: var(--text);
   font-size: clamp(0.94rem, 1.1vw, 1.08rem);
   font-weight: 700;
   line-height: 1.05;
@@ -1467,55 +1523,74 @@ button {
 .about-secondary {
   position: absolute;
   top: 0.2rem;
-  left: min(575px, 43vw);
-  width: min(680px, 45vw);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
-  gap: 0.88rem;
+  right: clamp(1.2rem, 4.4vw, 5.2rem);
+  left: auto;
+  width: min(560px, 38vw);
+  display: block;
+  text-align: left;
 }
 
-.about-panel {
-  min-height: 186px;
-  padding: 0.82rem 0.9rem 0.8rem;
-  border: 1px solid rgba(255, 0, 51, 0.2);
-  background:
-    linear-gradient(180deg, rgba(20, 2, 6, 0.76), rgba(6, 2, 4, 0.58)),
-    rgba(0, 0, 0, 0.42);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 0, 51, 0.08),
-    0 0 24px rgba(255, 0, 51, 0.08);
-  backdrop-filter: blur(3px);
+.about-showcase {
+  position: relative;
+  min-height: 560px;
 }
 
-.about-panel-label {
-  margin: 0 0 0.9rem;
-  color: rgba(255, 0, 51, 0.68);
+.about-showcase-window {
+  min-height: 560px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.about-showcase-label {
+  margin: 0 0 0.95rem;
+  color: var(--dim);
   font-size: 0.84rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.about-panel-value {
-  margin: 0;
+.about-showcase-window h2 {
+  margin: 0 0 1.25rem;
+  max-width: 14ch;
+  font-size: clamp(2.8rem, 4.8vw, 4.9rem);
+  font-weight: 700;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 20px rgba(0, 0, 0, 0.42),
+    0 0 34px rgba(0, 0, 0, 0.18);
 }
 
-.about-panel-list {
+.about-showcase-copy {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1.16rem, 1.45vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.04;
+}
+
+.about-showcase-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.about-panel-list li {
-  margin: 0 0 0.52rem;
-  color: rgba(255, 0, 51, 0.86);
-  font-size: clamp(1rem, 1.32vw, 1.26rem);
+.about-showcase-list li {
+  margin: 0 0 0.66rem;
+  max-width: 28ch;
+  color: var(--muted);
+  font-size: clamp(1.04rem, 1.3vw, 1.22rem);
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.02;
   text-transform: uppercase;
 }
 
-.about-panel-list li:last-child {
+.about-showcase-list li:last-child {
   margin-bottom: 0;
 }
 
@@ -1527,7 +1602,7 @@ button {
 }
 
 .about-links a {
-  color: var(--accent);
+  color: var(--text);
   background: transparent;
   border-radius: 0;
   font-size: clamp(1rem, 1.4vw, 1.5rem);
@@ -1694,6 +1769,18 @@ button {
   }
 }
 
+@keyframes radioEqualizerStop {
+  0% {
+    transform: scaleY(0.38);
+  }
+  34% {
+    transform: scaleY(1.28);
+  }
+  100% {
+    transform: scaleY(0.1);
+  }
+}
+
 @keyframes radioPanelIn {
   from {
     opacity: 0;
@@ -1702,6 +1789,16 @@ button {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes smokeDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.02);
+  }
+  50% {
+    transform: translate3d(-2%, 0, 0) scale(1.06);
   }
 }
 
@@ -1869,18 +1966,18 @@ button {
 
   .about-secondary {
     top: 0.9rem;
-    left: 50%;
-    width: min(700px, 60vw);
-    gap: 0.95rem;
+    right: clamp(1.2rem, 4vw, 3rem);
+    left: auto;
+    width: min(560px, 44vw);
   }
 
-  .about-panel {
-    min-height: 180px;
-    padding: 1rem;
+  .about-showcase,
+  .about-showcase-window {
+    min-height: 500px;
   }
 
-  .about-panel-list li {
-    font-size: clamp(0.92rem, 1.1vw, 1.08rem);
+  .about-showcase-window h2 {
+    font-size: clamp(2.5rem, 4.2vw, 4.2rem);
   }
 }
 
@@ -1926,17 +2023,19 @@ button {
   }
 
   .about-secondary {
-    width: min(660px, 62vw);
+    width: min(520px, 42vw);
   }
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 900px) {
   .hud-left {
-    top: 5.6rem;
+    top: 1.1rem;
+    left: 1rem;
+    max-width: none;
   }
 
   .hud-left h1 {
-    font-size: 2rem;
+    font-size: 1.9rem;
   }
 
   .hud-left p {
@@ -1969,8 +2068,20 @@ button {
   }
 
   .about-secondary {
-    left: 52vw;
-    width: 40vw;
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    margin-top: 1.4rem;
+  }
+
+  .about-showcase,
+  .about-showcase-window {
+    min-height: 460px;
+  }
+
+  .about-secondary {
+    margin-top: 1.4rem;
   }
 
   .about-stat-grid {
@@ -2018,7 +2129,15 @@ button {
   }
 
   .hud-left {
-    display: none;
+    display: flex;
+    top: 1rem;
+    left: 0.9rem;
+    z-index: 16;
+  }
+
+  .hud-left h1 {
+    font-size: 1.55rem;
+    letter-spacing: 0.06em;
   }
 
   .hud-debug {
@@ -2048,6 +2167,29 @@ button {
 
   .radio-volume input {
     width: min(7rem, 30vw);
+  }
+
+  .about-secondary {
+    margin-top: 1.1rem;
+  }
+
+  .about-showcase,
+  .about-showcase-window {
+    min-height: 420px;
+  }
+
+  .about-showcase-window {
+    padding: 0.95rem 0.95rem 0;
+  }
+
+  .about-showcase-window h2 {
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    max-width: 12ch;
+  }
+
+  .about-showcase-copy,
+  .about-showcase-list li {
+    font-size: clamp(0.98rem, 3.4vw, 1.08rem);
   }
 
   .works-page {

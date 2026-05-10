@@ -1,5 +1,6 @@
 <template>
   <section
+    ref="radioRoot"
     class="techno-radio"
     :class="{ expanded: isOpen }"
     data-testid="techno-radio"
@@ -10,7 +11,7 @@
       class="radio-toggle"
       :class="{ active: isPlaying || isAutoplayPending }"
       :aria-expanded="isOpen"
-      aria-label="Abrir rádio"
+      aria-label="Abrir radio"
       @click="togglePanel"
     >
       <span class="radio-eq-bar"></span>
@@ -19,11 +20,21 @@
       <span class="radio-eq-bar"></span>
     </button>
 
+    <audio
+      v-if="hasPlaylist"
+      ref="audioElement"
+      :src="activeTrack?.src"
+      preload="metadata"
+      @play="isPlaying = true"
+      @pause="isPlaying = false"
+      @ended="nextStation"
+    ></audio>
+
     <div v-if="isOpen" class="radio-panel">
       <div class="radio-meta">
         <span class="radio-kicker">GBRL RADIO</span>
         <strong>{{ activeStation.name }}</strong>
-        <span>{{ activeStation.bpm }} BPM · lofi techno livre</span>
+        <span>{{ activeStation.meta }}</span>
       </div>
 
       <div class="radio-controls">
@@ -37,13 +48,13 @@
           {{ isPlaying ? "STOP" : "PLAY" }}
         </button>
 
-        <button type="button" class="radio-icon-button" aria-label="Trocar estação" @click="nextStation">
+        <button type="button" class="radio-icon-button" aria-label="Trocar faixa" @click="nextStation">
           ↻
         </button>
 
         <label class="radio-volume">
           <span>VOL</span>
-          <input v-model.number="volume" type="range" min="0" max="0.75" step="0.01" />
+          <input v-model.number="volume" type="range" min="0" max="1" step="0.01" />
         </label>
       </div>
     </div>
@@ -51,39 +62,78 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-const stations = [
+const importedTracks = import.meta.glob("../../assets/radio/*.{mp3,wav,ogg,m4a}", {
+  eager: true,
+  import: "default",
+});
+
+const playlist = Object.entries(importedTracks)
+  .sort(([leftPath], [rightPath]) => leftPath.localeCompare(rightPath))
+  .map(([path, src], index) => {
+    const rawName = path.split("/").pop()?.replace(/\.[^.]+$/, "") ?? `Track ${index + 1}`;
+    const displayName = rawName
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+    return {
+      id: `track-${index + 1}`,
+      name: displayName || `Track ${index + 1}`,
+      meta: "",
+      src,
+    };
+  });
+
+const synthStations = [
   {
     name: "Rain Terminal",
     bpm: 116,
     bass: [36, 36, 43, 36, 39, 36, 43, 34],
     arp: [67, 72, 74, 79, 72, 76, 74, 67],
-    hatDensity: 2
+    hatDensity: 2,
   },
   {
     name: "Soft Voltage",
     bpm: 122,
     bass: [36, 48, 36, 43, 46, 36, 43, 48],
     arp: [69, 76, 81, 74, 78, 72, 81, 76],
-    hatDensity: 2
+    hatDensity: 2,
   },
   {
     name: "Late District",
     bpm: 118,
     bass: [33, 33, 40, 33, 45, 40, 33, 38],
     arp: [64, 69, 72, 76, 69, 74, 72, 67],
-    hatDensity: 2
-  }
+    hatDensity: 2,
+  },
 ];
 
+const radioRoot = ref(null);
+const audioElement = ref(null);
 const isPlaying = ref(false);
 const isOpen = ref(false);
-const isAutoplayPending = ref(true);
+const isAutoplayPending = ref(false);
+const trackIndex = ref(0);
 const stationIndex = ref(0);
-const volume = ref(0.26);
+const volume = ref(0.8);
+const shouldResumeAfterTrackChange = ref(false);
 
-const activeStation = computed(() => stations[stationIndex.value]);
+const hasPlaylist = computed(() => playlist.length > 0);
+const activeTrack = computed(() => playlist[trackIndex.value] ?? null);
+const activeStation = computed(() => {
+  if (hasPlaylist.value) {
+    return activeTrack.value ?? { name: "Sem faixa", meta: "Adicione .mp3 em assets/radio" };
+  }
+
+  const station = synthStations[stationIndex.value];
+  return {
+    ...station,
+    meta: `${station.bpm} BPM · lofi techno livre`,
+  };
+});
 
 let audioContext;
 let masterGain;
@@ -92,6 +142,37 @@ let delayFeedback;
 let schedulerId;
 let nextStepTime = 0;
 let currentStep = 0;
+
+function waitForAudioReady(element) {
+  if (element.readyState >= 3) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve, reject) => {
+    const onReady = () => {
+      cleanup();
+      resolve();
+    };
+
+    const onError = () => {
+      cleanup();
+      reject(new Error("Audio failed to load"));
+    };
+
+    const cleanup = () => {
+      element.removeEventListener("canplay", onReady);
+      element.removeEventListener("canplaythrough", onReady);
+      element.removeEventListener("loadeddata", onReady);
+      element.removeEventListener("error", onError);
+    };
+
+    element.addEventListener("canplay", onReady, { once: true });
+    element.addEventListener("canplaythrough", onReady, { once: true });
+    element.addEventListener("loadeddata", onReady, { once: true });
+    element.addEventListener("error", onError, { once: true });
+    element.load();
+  });
+}
 
 function midiToFrequency(note) {
   return 440 * 2 ** ((note - 69) / 12);
@@ -173,7 +254,7 @@ function playClap(time) {
 }
 
 function scheduleStep(step, time) {
-  const station = activeStation.value;
+  const station = synthStations[stationIndex.value];
   const stepDuration = 60 / station.bpm / 4;
   const patternStep = step % 16;
 
@@ -203,7 +284,7 @@ function scheduler() {
     return;
   }
 
-  const station = activeStation.value;
+  const station = synthStations[stationIndex.value];
   const stepDuration = 60 / station.bpm / 4;
 
   while (nextStepTime < audioContext.currentTime + 0.12) {
@@ -233,26 +314,53 @@ function setupAudio() {
   masterGain.connect(audioContext.destination);
 }
 
-async function startPlayback() {
+async function startSynthPlayback() {
   setupAudio();
   await audioContext.resume();
-  if (schedulerId) {
-    isPlaying.value = true;
-    isAutoplayPending.value = false;
-    return;
+
+  if (!schedulerId) {
+    nextStepTime = audioContext.currentTime + 0.05;
+    currentStep = 0;
+    schedulerId = window.setInterval(scheduler, 25);
   }
 
-  nextStepTime = audioContext.currentTime + 0.05;
-  currentStep = 0;
-  schedulerId = window.setInterval(scheduler, 25);
   isPlaying.value = true;
   isAutoplayPending.value = false;
 }
 
-function stopPlayback() {
+async function startFilePlayback() {
+  if (!audioElement.value) {
+    return;
+  }
+
+  audioElement.value.volume = volume.value;
+  await waitForAudioReady(audioElement.value);
+  await audioElement.value.play();
+  isPlaying.value = true;
+  isAutoplayPending.value = false;
+}
+
+async function startPlayback() {
+  if (hasPlaylist.value) {
+    await startFilePlayback();
+    return;
+  }
+
+  await startSynthPlayback();
+}
+
+function stopSynthPlayback() {
   if (schedulerId) {
     window.clearInterval(schedulerId);
     schedulerId = null;
+  }
+}
+
+function stopPlayback() {
+  if (hasPlaylist.value) {
+    audioElement.value?.pause();
+  } else {
+    stopSynthPlayback();
   }
 
   isPlaying.value = false;
@@ -271,30 +379,46 @@ function togglePlayback() {
 
 function togglePanel() {
   isOpen.value = !isOpen.value;
+}
 
-  if (!isPlaying.value) {
+function closePanel() {
+  isOpen.value = false;
+}
+
+function nextStation() {
+  shouldResumeAfterTrackChange.value = isPlaying.value || hasPlaylist.value;
+
+  stopPlayback();
+
+  if (hasPlaylist.value) {
+    trackIndex.value = (trackIndex.value + 1) % playlist.length;
+  } else {
+    stationIndex.value = (stationIndex.value + 1) % synthStations.length;
+    currentStep = 0;
+
+    if (audioContext) {
+      nextStepTime = audioContext.currentTime + 0.04;
+    }
+  }
+
+  if (!hasPlaylist.value && shouldResumeAfterTrackChange.value) {
     startPlayback().catch(() => {
       isAutoplayPending.value = true;
     });
   }
 }
 
-function nextStation() {
-  stationIndex.value = (stationIndex.value + 1) % stations.length;
-  currentStep = 0;
-
-  if (audioContext) {
-    nextStepTime = audioContext.currentTime + 0.04;
-  }
-}
-
-watch(volume, (nextVolume) => {
-  if (!masterGain || !audioContext) {
+function handlePointerDown(event) {
+  if (!isOpen.value || !radioRoot.value) {
     return;
   }
 
-  masterGain.gain.setTargetAtTime(nextVolume, audioContext.currentTime, 0.04);
-});
+  if (radioRoot.value.contains(event.target)) {
+    return;
+  }
+
+  closePanel();
+}
 
 function startOnFirstGesture() {
   startPlayback()
@@ -307,7 +431,48 @@ function startOnFirstGesture() {
     });
 }
 
-onMounted(() => {
+watch(volume, (nextVolume) => {
+  if (audioElement.value) {
+    audioElement.value.volume = nextVolume;
+  }
+
+  if (!masterGain || !audioContext) {
+    return;
+  }
+
+  masterGain.gain.setTargetAtTime(nextVolume, audioContext.currentTime, 0.04);
+});
+
+watch(trackIndex, async () => {
+  if (!hasPlaylist.value || !audioElement.value) {
+    return;
+  }
+
+  await nextTick();
+
+  if (shouldResumeAfterTrackChange.value) {
+    startFilePlayback()
+      .catch(() => {
+        isAutoplayPending.value = true;
+      })
+      .finally(() => {
+        shouldResumeAfterTrackChange.value = false;
+      });
+    return;
+  }
+
+  shouldResumeAfterTrackChange.value = false;
+});
+
+onMounted(async () => {
+  await nextTick();
+
+  if (audioElement.value) {
+    audioElement.value.volume = volume.value;
+  }
+
+  document.addEventListener("pointerdown", handlePointerDown);
+
   startPlayback().catch(() => {
     isAutoplayPending.value = true;
     window.addEventListener("pointerdown", startOnFirstGesture, { once: true });
@@ -317,6 +482,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   stopPlayback();
+  document.removeEventListener("pointerdown", handlePointerDown);
   window.removeEventListener("pointerdown", startOnFirstGesture);
   window.removeEventListener("keydown", startOnFirstGesture);
 

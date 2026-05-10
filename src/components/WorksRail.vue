@@ -24,7 +24,7 @@
 
     <div class="work-backdrop-tunnel" aria-hidden="true">
       <article
-        v-for="panel in videoPanels"
+        v-for="panel in displayPanels"
         :key="panel.id"
         class="work-video-panel"
         :class="panel.className"
@@ -35,13 +35,15 @@
           '--panel-z': `${panel.z}px`,
           '--panel-delay': `${panel.delay}s`,
           '--panel-duration': `${panel.duration}s`,
-          '--panel-scale': panel.scale
+          '--panel-scale': panel.scale,
+          '--panel-image': `url(${panel.project.panelImageSrc})`
         }"
       >
+        <div class="work-video-panel-media"></div>
         <div class="work-video-noise"></div>
         <span>{{ panel.code }}</span>
-        <strong>{{ panel.label }}</strong>
-        <small>{{ panel.caption }}</small>
+        <strong>{{ panel.project.title }}</strong>
+        <small>{{ panel.project.role }}</small>
       </article>
     </div>
 
@@ -73,15 +75,30 @@
         >
           <div class="work-media-plane">
             <video
-              class="work-stage-video"
-              data-testid="work-stage-video"
-              :src="activeWork.video?.src"
-              :aria-label="activeWork.video?.label ?? `Video demonstrativo em loop do projeto ${activeWork.title}`"
+              v-if="activeWork.video?.previewSrc"
+              class="work-stage-video work-stage-video-preview"
+              :class="{ 'is-hidden': isHighReady }"
+              :src="activeWork.video.previewSrc"
+              :aria-label="`Preview em baixa qualidade do projeto ${activeWork.title}`"
               autoplay
               muted
               loop
               playsinline
-              preload="metadata"
+              preload="auto"
+            ></video>
+            <video
+              class="work-stage-video"
+              data-testid="work-stage-video"
+              :class="{ 'is-ready': isHighReady }"
+              :src="highVideoSrc"
+              :aria-label="activeWork.video?.label ?? `Video demonstrativo em loop do projeto ${activeWork.title}`"
+              @loadeddata="onHighVideoLoaded"
+              @error="onHighVideoLoaded"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="auto"
             ></video>
           </div>
           <div class="work-floor-reflection" aria-hidden="true"></div>
@@ -140,7 +157,12 @@ const store = useStore();
 const railRoot = ref(null);
 const stagePanel = ref(null);
 const sequencerRefs = ref([]);
+const panelAssignments = ref([]);
 const isInfoOpen = ref(false);
+const isHighReady = ref(false);
+const highVideoSrc = ref("");
+let highVideoLoadTimer = null;
+let activeVideoToken = 0;
 const rainDrops = Array.from({ length: 28 }, (_, index) => ({
   id: `drop-${index}`,
   x: (index * 37) % 100,
@@ -149,19 +171,19 @@ const rainDrops = Array.from({ length: 28 }, (_, index) => ({
   length: 12 + (index % 4) * 7
 }));
 
-const videoPanels = [
-  { id: "v-01", code: "SYS 01", label: "ARCHIVE 90", caption: "old city", x: -43, y: 32, z: -150, delay: -0.2, duration: 13, scale: 1.04, className: "panel-left panel-red panel-poster" },
-  { id: "v-02", code: "SYS 02", label: "SURVIVAL OPS", caption: "safe room", x: -6, y: -30, z: -250, delay: -1.5, duration: 15, scale: 0.86, className: "panel-center panel-cyan panel-hud" },
-  { id: "v-03", code: "SYS 03", label: "NEURAL CITY", caption: "wet street", x: 36, y: 34, z: -190, delay: -2.7, duration: 14, scale: 0.95, className: "panel-right panel-green panel-hud" },
-  { id: "v-04", code: "CAM 04", label: "MOTEL HALL", caption: "corridor", x: -38, y: 232, z: -320, delay: -4.2, duration: 16, scale: 0.68, className: "panel-left panel-amber panel-poster" },
-  { id: "v-05", code: "CAM 05", label: "DATA VAULT", caption: "terminal", x: 18, y: 160, z: -290, delay: -5.8, duration: 17, scale: 0.76, className: "panel-center panel-red panel-hud" },
-  { id: "v-06", code: "CAM 06", label: "NIGHT DRIVE", caption: "rear view", x: 45, y: 246, z: -360, delay: -7.1, duration: 15, scale: 0.62, className: "panel-right panel-cyan panel-wide" },
-  { id: "v-07", code: "CAM 07", label: "PHOTO LAB", caption: "negative", x: -48, y: -56, z: -420, delay: -8.5, duration: 18, scale: 0.62, className: "panel-left panel-green panel-grid" },
-  { id: "v-08", code: "CAM 08", label: "CONTROL", caption: "system", x: 47, y: -48, z: -390, delay: -9.6, duration: 16, scale: 0.66, className: "panel-right panel-amber panel-hud" },
-  { id: "v-09", code: "CAM 09", label: "CASE FILE", caption: "evidence", x: -2, y: 302, z: -470, delay: -10.8, duration: 19, scale: 0.55, className: "panel-center panel-red panel-wide" }
+const panelLayouts = [
+  { id: "v-01", code: "SYS 01", x: -43, y: 32, z: -150, delay: -0.2, duration: 13, scale: 1.04, className: "panel-left panel-red panel-poster" },
+  { id: "v-02", code: "SYS 02", x: -6, y: -30, z: -250, delay: -1.5, duration: 15, scale: 0.86, className: "panel-center panel-cyan panel-hud" },
+  { id: "v-03", code: "SYS 03", x: 36, y: 34, z: -190, delay: -2.7, duration: 14, scale: 0.95, className: "panel-right panel-green panel-hud" },
+  { id: "v-04", code: "CAM 04", x: -38, y: 232, z: -320, delay: -4.2, duration: 16, scale: 0.68, className: "panel-left panel-amber panel-poster" },
+  { id: "v-05", code: "CAM 05", x: 18, y: 160, z: -290, delay: -5.8, duration: 17, scale: 0.76, className: "panel-center panel-red panel-hud" },
+  { id: "v-06", code: "CAM 06", x: 45, y: 246, z: -360, delay: -7.1, duration: 15, scale: 0.62, className: "panel-right panel-cyan panel-wide" },
+  { id: "v-07", code: "CAM 07", x: -48, y: -56, z: -420, delay: -8.5, duration: 18, scale: 0.62, className: "panel-left panel-green panel-grid" },
+  { id: "v-08", code: "CAM 08", x: 47, y: -48, z: -390, delay: -9.6, duration: 16, scale: 0.66, className: "panel-right panel-amber panel-hud" },
+  { id: "v-09", code: "CAM 09", x: -2, y: 302, z: -470, delay: -10.8, duration: 19, scale: 0.55, className: "panel-center panel-red panel-wide" }
 ];
 
-const floorReflections = videoPanels.slice(0, 7).map((panel, index) => ({
+const floorReflections = panelLayouts.slice(0, 7).map((panel, index) => ({
   id: panel.id,
   x: panel.x * 0.82,
   y: 28 + index * 18,
@@ -171,6 +193,12 @@ const floorReflections = videoPanels.slice(0, 7).map((panel, index) => ({
 }));
 
 const works = computed(() => store.state.works);
+const displayPanels = computed(() => {
+  return panelLayouts.map((panel, index) => ({
+    ...panel,
+    project: panelAssignments.value[index] ?? works.value[index % works.value.length]
+  }));
+});
 const activeWork = computed(() => store.getters.activeWork);
 const activeIndex = computed(() => {
   return works.value.findIndex((work) => work.id === activeWork.value?.id);
@@ -261,6 +289,42 @@ function resetStagePointer() {
   railElement.style.setProperty("--scene-shift-y", "0px");
 }
 
+function assignPanels() {
+  if (!works.value.length) {
+    panelAssignments.value = [];
+    return;
+  }
+
+  panelAssignments.value = panelLayouts.map((_, index) => {
+    const randomIndex = Math.floor(Math.random() * works.value.length);
+    return works.value[(randomIndex + index) % works.value.length];
+  });
+}
+
+function queueHighVideoLoad() {
+  activeVideoToken += 1;
+  const token = activeVideoToken;
+
+  isHighReady.value = false;
+  highVideoSrc.value = "";
+
+  if (highVideoLoadTimer) {
+    clearTimeout(highVideoLoadTimer);
+  }
+
+  highVideoLoadTimer = window.setTimeout(() => {
+    if (token !== activeVideoToken) {
+      return;
+    }
+
+    highVideoSrc.value = activeWork.value?.video?.src ?? "";
+  }, 140);
+}
+
+function onHighVideoLoaded() {
+  isHighReady.value = true;
+}
+
 if (typeof document !== "undefined") {
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("mousemove", onStagePointerMove);
@@ -269,6 +333,7 @@ if (typeof document !== "undefined") {
 }
 
 onMounted(() => {
+  assignPanels();
   const railElement = railRoot.value ?? document.querySelector("[data-testid='works-rail']");
   document.addEventListener("keydown", onKeyDown);
   document.addEventListener("mousemove", onStagePointerMove);
@@ -303,9 +368,14 @@ onBeforeUnmount(() => {
   window.removeEventListener("mousemove", onStagePointerMove);
   railElement?.removeEventListener("mousemove", onStagePointerMove);
   railElement?.removeEventListener("pointermove", onStagePointerMove);
+
+  if (highVideoLoadTimer) {
+    clearTimeout(highVideoLoadTimer);
+  }
 });
 
 watch(activeWork, async () => {
+  queueHighVideoLoad();
   await nextTick();
 
   if (!stagePanel.value) {
@@ -317,5 +387,5 @@ watch(activeWork, async () => {
     { opacity: 0, filter: "blur(12px)" },
     { opacity: 1, filter: "blur(0px)", duration: 0.62, ease: "power3.out" }
   );
-});
+}, { immediate: true });
 </script>
